@@ -111,8 +111,11 @@ function generatePlaylist() {
     }
   }
 
-  // Add list to page
+  // Remove previous playlist from page and add new one
   const playlistContainer = document.getElementById('playlist-container');
+  if (playlistContainer.hasChildNodes()) {
+    playlistContainer.removeChild(playlistContainer.childNodes[0]);
+  }
   playlistContainer.appendChild(makeUL(shuffle(playlist)));  
 
   // TODO: make youtube playlist 
