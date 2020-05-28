@@ -12,23 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
-
 /** 
- * Implementation of Fisher-Yates shuffle from https://javascript.info/task/shuffle
+ * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
  */
 function shuffle(array) {
   retArray = [...array];
@@ -41,7 +26,7 @@ function shuffle(array) {
 }
 
 /** 
- * Make unordered list from array
+ * Makes unordered list from array.
  */
 function makeUL(array) {
   const list = document.createElement('ul');
@@ -56,14 +41,37 @@ function makeUL(array) {
 }
 
 /**
- * Generates a playlist based on selected genres and number of songs
+ * Validates form on submission.
+ */
+(function() {
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    const validation = Array.prototype.filter.call(forms, function(form) {
+      const button = document.getElementById('playlistSubmit');
+      button.addEventListener('click', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+
+/**
+ * Generates a playlist based on selected genres and number of songs.
  */
 function generatePlaylist() {
+
   // Constants
   const playlistForm = document.forms["playlistSelections"];
   const genreToListMap = new Map() 
   const hipHop = ["Check yo self - ice cube", "Tierra Whack - only child", "Gold teeth - blood orange", "Who dat boy - tyler, the creator", "Poetic justice - kendrick lamar", "Solo (reprise) - frank ocean", "Bank - earthgang", "It ain’t hard to tell - nas", "Jazz - mick jenkins", "Boogie - brockhampton", "Ready or not - fugees", "Wax on - injury reserve", "King kunta - kendrick lamar", 
-      "Self - noname", "Casket pretty - noname", "Bissonnet - maxo kream", "Pimp tha pen - dj screw", "Grilling niggas - cupcakke", "Rnp - ybn cordae", "Mood - rico nasty", "Cheat code - rico nasty"];
+      "Self - noname", "Casket pretty - noname", "Bissonnet - maxo kream", "Pimp tha pen - dj screw", "Realer - Megan Thee Stallion", "Rnp - ybn cordae", "Mood - rico nasty", "Cheat code - rico nasty"];
   const rAndB = ["Cranes in the Sky - Solange", "Diddy Bop - Noname", "Come Over - the internet", "Whipped cream - ari lennox", "4 leaf clover - ravyn lenae", "Nothing burns like the cold - snoh allegra", "Dear april - frank ocean", "Do u wrong - leven kali", "Hair down - sir", "Petrol bliss - choker", "Florence - loyle carner", "Shades of blue - kelsey lu", "Color theory - kari faux", 
       "George-arlo parks", "Good for you - blood orange", "Headaches - raveena", "Polly - moses sumney", "Montego bae - noname", "Pink and white frank ocean", "Wikipedia - jean deaux", "Sticky - raven lenae", "Grey luh - berhana", "Self importance - kilo kish"];
   const funk = ["Superstition - Stevie Wonder", "Purple Rain - Prince", "Raspberry Beret - Prince", "What’s Going On - Marvin Gaye", "Brick House - Commodores", "I Got to Groove - Tower of Power", "Tell Me Something Good - Rufus and Chaka Khan", "Thank You (Falettinme Be Mice Elf Agin) - Sly & the Family Stone", "Maggot Brain - Funkadelic", "Move on Up - The Dynamics", 
@@ -76,23 +84,20 @@ function generatePlaylist() {
   const postPunk = ["Punks - Matt Champion", "Fangs - matt champion", "Call this # now - the garden", "Stylish spit - the garden", "All access - the garden", "Clench to stay awake - the garden", "Bizarre love triangle - new order", "Neat neat neat - the damned", "Emergency blimp - king krule", "Vidual - king krule", "Half man half shark - king krule", "Comet face - king krule", 
       "Blue train lines - mount kimbie", "Midnight 01 (deep sea diver) - king krule", "Heads will roll - yeah yeah yeahs", "Wolf like me - tv on the radio", "Tenement roofs - glorious din", "Big joanie - dream no 9", "Rip it up - orange juice", "Blister in the sun - violent femmes", "Disorder - joy division"];
 
+  // Get user selections
+  const selectElement = document.getElementById('genreSelect');
+  let selectedGenres = Array.from(selectElement.selectedOptions)
+      .map(option => option.value);
+  
+  playlistLength = document.getElementById("playlist-length").value;
+
+  // Populate map
   genreToListMap.set('hip-hop', hipHop);
   genreToListMap.set('rb', rAndB);
   genreToListMap.set('funk', funk);
   genreToListMap.set('bedroom-pop', bedroomPop);
   genreToListMap.set('neo-soul', neoSoul);
   genreToListMap.set('post-punk', postPunk);
-
-  // TODO: Validate that user selected three genres
-
-  // Get user selections
-  let selectedGenres = [];
-  for (let i = 0; i < playlistForm.length; i++) {
-    if (playlistForm[i].checked) {
-      selectedGenres.push(playlistForm[i].value);
-    }
-  }
-  playlistLength = document.getElementById("playlist-length").value;
 
   // Get number of songs for each genre
   const songsPerGenre = Math.floor(playlistLength / selectedGenres.length);

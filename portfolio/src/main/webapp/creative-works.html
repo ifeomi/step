@@ -2,35 +2,74 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Creative Works | Ife Omidiran </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <script src="script.js"></script>
+    <title>Creative Works | Ife Omidiran </title>
   </head>
   <body>
     <header>
-      <nav><a href="index.html">home</a></nav>
-      <nav><a href="creative-works.html">creative works</a></nav>
-      <nav><a href="guitar.html">guitar</a></nav>
-      <nav><a href="playlists.html">playlists</a></nav>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html">Ife Omidiran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="playlists.html">playlist generator</a>
+            </li>
+            <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                hobbies
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="guitar.html">guitar</a>
+                <a class="dropdown-item" href="#" >creative works <span class="sr-only">(current)</span></a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
-    <div id="content">
+    <div class="container">
       <h1>Creative Works</h1>
-      <div id="container">
-        <figure>
-          <img src="images/disposable.jpg"></a>
-          <figcaption>Disposable Diaries 1, August 2019</figcaption>
-        </figure>
-        <figure>
-          <img src="images/disposable1.jpg">
-          <figcaption>Disposable Diaries 2, August 2019</figcaption>
-        </figure>
-        <figure>
-          <video src="images/radical_love.mp4" type="video/mp4" width="320px"
-              height="180px" controls controlsList="nodownload">
-          </video>
-          <figcaption>Towards Radical Love, September 2017</figcaption>
-        </figure>
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-4">
+          <div class="card">
+            <img src="images/disposable.jpg" class="card-img-top"
+                alt="Disposable camera picture of a man holding a snake on the Brooklyn Bridge">
+            <div class="card-body">
+              <p class="card-text">Disposable Diaries 1, August 2019</p>
+            </div>
+          </div>          
+        </div>
+        <div class="col mb-4">
+          <div class="card">
+            <img src="images/disposable1.jpg" class="card-img-top"
+                alt="Disposable camera picture of Olivia skating">
+            <div class="card-body">
+              <p class="card-text">Disposable Diaries 2, August 2019</p>
+            </div>
+          </div>
+        </div>
+        <div class="col mb-4">
+          <div class="card">
+            <video class="card-img-top" playsinline controls controlsList="nodownload">
+              <source src="images/radical_love.mp4" type="video/mp4">
+            </video>
+            <div class="card-body">
+              <p class="card-text">Towards Radical Love, September 2017</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

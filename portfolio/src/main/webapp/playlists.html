@@ -2,44 +2,79 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Playlists | Ife Omidiran </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <script src="script.js"></script>
+    <title>Playlists | Ife Omidiran </title>
   </head>
   <body>
     <header>
-      <nav><a href="index.html">home</a></nav>
-      <nav><a href="creative-works.html">creative works</a></nav>
-      <nav><a href="guitar.html">guitar</a></nav>
-      <nav><a href="playlists.html">playlists</a></nav>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html">Ife Omidiran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">playlist generator<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                hobbies
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="guitar.html">guitar</a>
+                <a class="dropdown-item" href="creative-works.html">creative works</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
-    <div id="content">
+    <div class="container">
       <h1>Playlist Generator</h1>
-      <p>Select up to 3 genres and the number of songs to generate a playlist
-          from some of the songs in my library!</p>
-      <form name="playlistSelections">
-        <input type="checkbox" id="genre1" name="genre1" value="hip-hop">
-        <label for="genre1"> Hip hop</label><br>
-        <input type="checkbox" id="genre2" name="genre2" value="rb">
-        <label for="genre2"> R&amp;B</label><br>
-        <input type="checkbox" id="genre3" name="genre3" value="funk">
-        <label for="genre3">Funk</label><br>
-        <input type="checkbox" id="genre4" name="genre4" value="bedroom-pop">
-        <label for="genre4">Bedroom Pop</label><br>
-        <input type="checkbox" id="genre5" name="genre5" value="neo-soul">
-        <label for="genre5">Neo soul</label><br>
-        <input type="checkbox" id="genre6" name="genre6" value="post-punk">
-        <label for="genre6">Post-punk</label><br>
-        <input type="number" id="playlist-length" name="playlist-length" 
-            min="1" max="20" required>
-        <label for="playlist-length">Playlist length (up to 20 songs)</label>
+      <p>Select some genres and the number of songs to generate a playlist
+          from my library!</p>
+      <form name="playlistSelections" class="needs-validation" novalidate>
+        <div class="form-group">
+          <label for="genreSelect">Genres</label>
+            <select multiple class="form-control" id="genreSelect" required>
+              <option value="hip-hop">Hip hop</option>
+              <option value="rb">R&amp;B</option>
+              <option value="funk">Funk</option>
+              <option value="bedroom-pop">Bedroom pop</option>
+              <option value="neo-soul">Neo soul</option>
+              <option value="post-punk">Post-punk</option>
+            </select>
+          <div class="invalid-feedback">
+            Please select at least one genre.
+          </div>            
+        </div>
+        <div class="input-group mb-3">
+          <input class="form-control rounded-left"  type="number" id="playlist-length" 
+              placeholder="Playlist length" aria-label="Playlist length" 
+              name="playlist-length" min="1" max="20" required>
+          <div class="input-group-append">
+            <span class="input-group-text">songs</span>
+          </div>
+          <div class="invalid-feedback">
+            Please provide the playlist length.
+          </div>          
+        </div>
+        <button onclick="generatePlaylist()" type="button" class="btn btn-dark mb-3"
+            id="playlistSubmit">
+          Get your playlist!
+        </button>        
       </form>
-      <button onclick="generatePlaylist()">Get your playlist!</button>
       <div id="playlist-container"></div>   
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

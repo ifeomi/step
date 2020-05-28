@@ -2,22 +2,50 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Ife Omidiran</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <script src="script.js"></script>
+    <title>Ife Omidiran</title>
   </head>
   <body>
     <header>
-      <nav><a href="index.html">home</a></nav>
-      <nav><a href="creative-works.html">creative works</a></nav>
-      <nav><a href="guitar.html">guitar</a></nav>
-      <nav><a href="playlists.html">playlists</a></nav>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html">Ife Omidiran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="playlists.html">playlist generator</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                hobbies
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="guitar.html">guitar</a>
+                <a class="dropdown-item" href="creative-works.html">creative works</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
-    <div id="content">
-      <h1>Ife Omidiran</h1>
-      <img src="images/headshot.jpeg">
-      <p>Ife Omidiran is a technologist from Houston studying Social Studies 
+    <div id="content" class="container">
+      <div class="text-center">
+        <h1>Hi!</h1>
+        <h2>I'm Ife (pronounced ee·feh)</h2>
+        <img src="images/headshot.jpeg" class="w-75 mb-3">
+      </div>
+      <p>I'm from Houston, and I'm a rising junior studying Social Studies 
           and Computer Science at Harvard.</p>
       <h2>currently:</h2>
       <ul>
@@ -32,7 +60,7 @@
         <li>EP (Engineering Practicum) Intern @ Google NYC</li>
         <li>Campus Marketing Director @ Bumble</li>
       </ul>
-      <p>Find her on <a href="https://linkedin.com/in/ifeomi">linkedin</a> or 
+      <p>Find me on <a href="https://linkedin.com/in/ifeomi">linkedin</a> and 
       <a href="https://github.com/ifeomi">github</a>.</p>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
