@@ -8,15 +8,36 @@
   </head>
   <body>
     <header>
-        <nav><a href="index.html">home</a></nav>
-        <nav><a href="about.html">about me</a></nav>
-        <nav><a href="photography.html">photography</a></nav>
-        <nav><a href="guitar.html">guitar</a></nav>
-        <nav><a href="playlists.html">playlists</a></nav>
+      <nav><a href="index.html">home</a></nav>
+      <nav><a href="creative-works.html">creative works</a></nav>
+      <nav><a href="guitar.html">guitar</a></nav>
+      <nav><a href="playlists.html">playlists</a></nav>
     </header>
     <div id="content">
       <h1>Playlist Generator</h1>
-      <p>Todo: add playlist generator</p>
+      <p>Select up to 3 genres and the number of songs to generate a playlist
+          from some of the songs in my library</p>
+      <form name="playlistSelections">
+        <input type="checkbox" id="genre1" name="genre1" value="hip-hop">
+        <label for="genre1"> Hip hop</label><br>
+        <input type="checkbox" id="genre2" name="genre2" value="rb">
+        <label for="genre2"> R&amp;B</label><br>
+        <input type="checkbox" id="genre3" name="genre3" value="funk">
+        <label for="genre3">Funk</label><br>
+        <input type="checkbox" id="genre4" name="genre4" value="bedroom-pop">
+        <label for="genre4">Bedroom Pop</label><br>
+        <input type="checkbox" id="genre5" name="genre5" value="neo-soul">
+        <label for="genre5">Neo soul</label><br>
+        <input type="checkbox" id="genre6" name="genre6" value="post-punk">
+        <label for="genre6">Post-punk</label><br>
+        <input type="number" id="playlist-length" name="playlist-length" min="1" max="20">
+        <label for="playlist-length">Playlist length (up to 20 songs)</label>
+      </form>
+      <button onclick="generatePlaylist()">Get your playlist!</button>
+      <div id="playlist-container"></div>   
+      <p>Click here to get a random message:</p>
+      <button onclick="addRandomGreeting()">Hello</button>
+      <div id="greeting-container"></div>
     </div>
   </body>
 </html>
