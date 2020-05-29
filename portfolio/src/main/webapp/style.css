@@ -5,8 +5,13 @@ body {
   font-family: 'Fanwood Text', serif;
 }
 
-nav {
+header {
   background-color: #ffd1dc;
+}
+
+.navbar-brand {
+  font-family: 'Shrikhand', 'Fanwood Text', serif;
+  text-transform: lowercase;  
 }
 
 header {
@@ -15,9 +20,10 @@ header {
 
 h1, h2, h3, h4 {
   font-family: 'Shrikhand', var(--font-family-sans-serif);
+  text-transform: lowercase;
 }
 
-.container li {
+#content li {
   list-style-type: '* ';
 }
 
