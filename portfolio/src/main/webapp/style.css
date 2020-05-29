@@ -30,3 +30,7 @@ h1, h2, h3, h4 {
 img, .card {
   max-width: 320px;
 }
+
+.card-img-top, .card {
+    max-width: 500px;
+}
