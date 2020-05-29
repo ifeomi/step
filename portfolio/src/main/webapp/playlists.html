@@ -13,13 +13,13 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light">
+      <nav class="navbar navbar-expand-lg navbar-light container">
         <a class="navbar-brand" href="index.html">Ife Omidiran</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>        
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav ml-auto">
             <li class="nav-item">
               <a class="nav-link" href="index.html">home <span class="sr-only">(current)</span></a>
             </li>
@@ -39,11 +39,12 @@
         </div>
       </nav>
     </header>
-    <div class="container">
+    <div id="content" class="container">
       <h1>Playlist Generator</h1>
       <p>Select some genres and the number of songs to generate a playlist
           from my library!</p>
-      <form name="playlistSelections" class="needs-validation" novalidate>
+      <form name="playlistSelections" class="needs-validation" 
+          id="playlistForm" novalidate>
         <div class="form-group">
           <label for="genreSelect">Genres</label>
             <select multiple class="form-control" id="genreSelect" required>
@@ -67,9 +68,9 @@
           </div>
           <div class="invalid-feedback">
             Please provide the playlist length.
-          </div>          
+          </div>
         </div>
-        <button onclick="generatePlaylist()" type="button" class="btn btn-dark mb-3"
+        <button onclick="validatePlaylistForm();" type="button" class="btn btn-dark mb-3"
             id="playlistSubmit">
           Get your playlist!
         </button>        
