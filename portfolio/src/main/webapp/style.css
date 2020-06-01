@@ -23,11 +23,15 @@ h1, h2, h3, h4 {
   text-transform: lowercase;
 }
 
+#content {
+  min-height: calc(100vh - 184px);
+}
+
 #content li {
   list-style-type: '* ';
 }
 
-img, .card {
+img {
   max-width: 320px;
 }
 
