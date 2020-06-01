@@ -117,3 +117,12 @@ function generatePlaylist() {
 }
 
 document.getElementById('playlistSubmit').addEventListener('click', generatePlaylist);
+
+/**
+ * Add a string saying hello to the DOM
+ */
+function sayHello() {
+  fetch('/data').then(response => response.text()).then((greeting) => {
+    document.getElementById('greeting-container').innerText = greeting;
+  });
+}
