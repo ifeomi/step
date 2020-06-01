@@ -160,3 +160,12 @@ function generatePlaylist() {
   playlistContainer.appendChild(makeUL(playlistStrings));
   playlistContainer.appendChild(playlistLink);
 }
+
+/**
+ * Add a string saying hello to the DOM
+ */
+function sayHello() {
+  fetch('/data').then(response => response.text()).then((greeting) => {
+    document.getElementById('greeting-container').innerText = greeting;
+  });
+}
