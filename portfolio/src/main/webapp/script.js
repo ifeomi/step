@@ -28,11 +28,16 @@ function shuffle(array) {
 /** 
  * Makes unordered list from array.
  */
-function makeUL(array) {
+function makeUL(array, ulClass, liClass) {
   const list = document.createElement('ul');
-
+  if (ulClass !== null) {
+    list.classList.add(ulClass);
+  }
   for (let i = 0; i < array.length; i++) {
     const item = document.createElement('li');
+    if (liClass !== null) {
+      item.classList.add(liClass);
+    }
     item.appendChild(document.createTextNode(array[i]));
     list.appendChild(item);
   }
@@ -162,10 +167,11 @@ function generatePlaylist() {
 }
 
 /**
- * Add a string saying hello to the DOM
+ * Add comments to DOM
  */
-function sayHello() {
-  fetch('/data').then(response => response.text()).then((greeting) => {
-    document.getElementById('greeting-container').innerText = greeting;
+function addComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const commentContainer = document.getElementById('comments-container');
+    commentContainer.appendChild(makeUL(comments, "list-group", "list-group-item"));
   });
 }
