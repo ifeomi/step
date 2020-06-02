@@ -1,85 +1,158 @@
-const hipHop = ["Check yo self - ice cube", "Tierra Whack - only child", "Gold teeth - blood orange", "Who dat boy - tyler, the creator", "Poetic justice - kendrick lamar", "Solo (reprise) - frank ocean", "Bank - earthgang", "It ain’t hard to tell - nas", "Jazz - mick jenkins", "Boogie - brockhampton", "Ready or not - fugees", "Wax on - injury reserve", "King kunta - kendrick lamar", 
-    "Self - noname", "Casket pretty - noname", "Bissonnet - maxo kream", "Pimp tha pen - dj screw", "Realer - Megan Thee Stallion", "Rnp - ybn cordae", "Mood - rico nasty", "Cheat code - rico nasty"];
-const rAndB = ["Cranes in the Sky - Solange", "Diddy Bop - Noname", "Come Over - the internet", "Whipped cream - ari lennox", "4 leaf clover - ravyn lenae", "Nothing burns like the cold - snoh allegra", "Dear april - frank ocean", "Do u wrong - leven kali", "Hair down - sir", "Petrol bliss - choker", "Florence - loyle carner", "Shades of blue - kelsey lu", "Color theory - kari faux", 
-    "George-arlo parks", "Good for you - blood orange", "Headaches - raveena", "Polly - moses sumney", "Montego bae - noname", "Pink and white frank ocean", "Wikipedia - jean deaux", "Sticky - raven lenae", "Grey luh - berhana", "Self importance - kilo kish"];
-const funk = ["Superstition - Stevie Wonder", "Purple Rain - Prince", "Raspberry Beret - Prince", "What’s Going On - Marvin Gaye", "Brick House - Commodores", "I Got to Groove - Tower of Power", "Tell Me Something Good - Rufus and Chaka Khan", "Thank You (Falettinme Be Mice Elf Agin) - Sly & the Family Stone", "Maggot Brain - Funkadelic", "Move on Up - The Dynamics", 
-    "Don’t Stop ‘Til You Get Enough - Michael Jackson", "Signed, Sealed, Delivered (I'm Yours) - Stevie Wonder", "Sir Duke - Stevie Wonder", "When Doves Cry - Prince", "Daddy Rich - Rose Royce", "Sing a Simple Song - Sly & the Family Stone", "Get Down On It - Kool & the Gang", "Play that Funky Music - Wild Cherry", "Get Up (I Feel Like Being A) Sex Machine - James Brown", 
-    "Papa Was a Rolling Stone - the Temptations", "Water No Get Enemy - Fela Kuti"];
-const bedroomPop = ["Grandfather Clock - Thea", "Hit Me Up - Omar Apollo", "Ugotme - Omar Apollo", "Foolsong - Still Woozy", "B Cool - MaGroove", "Eternally 12 - Melanie Faye", "Paradise - Rex Orange County", "If You Want To - beabadoobee", "Bags - Clairo", "Sofia - Clairo", "Flaming Hot Cheetos - Clairo", "Hello? - Clairo", "Drowsy - Banes World", 
-    "Gap in the Clouds - Yellow Days", "Know Love - Rex Orange County", "Can’t be // How u feel - Billy Lemos", "Dreamz - Sara King", "Smoke Song Interlude - Sebastian Roca", "Moon Undah Water - Puma Blue", "Midnight Blue - Puma Blue", "Foolsong - Still Woozy", "Lucy - Still Woozy", "Sunflower - Rex Orange County"];
-const neoSoul = ["Almeda - Solange", "Doo wop - lauryn hill", "Stay flo - solange", "Ascension - maxwell", "Song 32 - noname", "Love is stronger than pride - solange", "Jailer - Asa", "Out my mind, just in time - erykah badu", "Are We Still Friends - tyler the creator", "Earfquake - tyler the creator", "Moon river - frank ocean", "Can’t take my eyes off you - lauryn hill", 
-    "Get up - amel larrieux", "Culture - kaytranada", "Sweet Love - Anita baker", "What you need - kaytranada", "Whathegirlmuthafuckinwannadoo - the coup", "I want war (but i need peace) - kali uchis", "The charade - d’angelo", "How does it feel - d’angelo", "Back to the future (part i) - d’angelo", "Dark red - steve lacy", "Some - steve lacy"];
-const postPunk = ["Punks - Matt Champion", "Fangs - matt champion", "Call this # now - the garden", "Stylish spit - the garden", "All access - the garden", "Clench to stay awake - the garden", "Bizarre love triangle - new order", "Neat neat neat - the damned", "Emergency blimp - king krule", "Vidual - king krule", "Half man half shark - king krule", "Comet face - king krule", 
-    "Blue train lines - mount kimbie", "Midnight 01 (deep sea diver) - king krule", "Heads will roll - yeah yeah yeahs", "Wolf like me - tv on the radio", "Tenement roofs - glorious din", "Big joanie - dream no 9", "Rip it up - orange juice", "Blister in the sun - violent femmes", "Disorder - joy division"];
-const hipHopIds = ["HdOhwPovkHI", "CXdTShfFPYM", "Wzurw1w3AjY", "FUXX55WqYZs", "iOtRxcTMsHc", "XXMHQ410P-c", "t5gh4uX-X40",
-    "0yCJs3GrjpE", "F-4KiszXxHM", "4cucHc2vef4", "aIXyKmElvv8", "F2r-8fd1jVE", "AC4bb9Q9-04", "tYVebHOrlZU", "f--ZuvER98U",
-    "8KxXsQjJsIw", "zI19cWqsLhA", "lDWeob50YY8", "sTTU-T9-RTs", "OJyy_stKS9c", "1og6jfhUPxE"];
-const rAndBIds = ["lnUV4cz0gv8", "OxdCR6wwoXs", "lovts-q5s0s", "vT02Lo5WhLI", "YzI76YfVXD4", "kobOjAkSrhk", "pvU4b4N1-QU", 
-    "TftBcX-kCQc", "9G-vhg8T2rc", "DBkjjuAoajY", "7HiB-hNt_mw", "6Fc4QwsTz_g", "i9PmsucjHrM", "NclTIViKiyE", "6UpjbnDfbRU",
-    "3xotpsdLS6c", "dta4heZacZE", "opRwZJsOe0w", "uzS3WG6__G4", "HK90QhbzIkw", "jEvv2PR0ZeI"];
-const funkIds = ["ftdZ363R9kQ", "S6Y1gohk5-A", "l7vRSu_wsNc", "MhC_iLBrSUY", "HhPu6GEoad8", "ALzISTfdXpQ", "vuDCi5neNMM",
-    "NOa5UOHdwnc", "T1NW57lk5fY", "50W9W0RHvwI", "yURRmWtbTbo", "6To0fvX_wFA", "EnNgASBdCeo", "oTUSeac7IuQ", "C02SFbc4zmM",
-    "42YGprrAOj0", "qchPLaiKocI", "JTvlujbJ5vg", "5SrQ9graFWQ", "71l85z2bXAs", "eAk3ayxi8Gk"];
-const bedroomPopIds = ["Mf5XrSuQ4R8", "2p7m2iY-WSY", "A0gpfwZP_To", "WMp0ZyQWKf4", "GYEKlxUty84", "dvWZt6SuNtI",
-    "zC3GHcPN4EQ", "sTQNJT7OZew", "L9HYJbe9Y18", "L9l8zCOwEII", "SRbzuwYMyDE", "QkeehQ8D_VM", "oFYOxVeQBTo", "GM8YDU6ZjBw",
-    "7VVLDCR4wPM", "xqC--4paOTM", "5ohMAVDUswQ", "qTe6toWNC6s", "OeCS-DZsgKM", "jCkBxmPbohk", "WMp0ZyQWKf4"];
-const neoSoulIds = ["6giKIu5jUvA", "T6QKqFPRZSA", "_W14wK4QGh4", "D7rm9t5S4uE", "0a4PD4SwEAs", "0ZARYxRmNWg", "OQuQV6u8-tk",
-    "2j4qvVyRgRk", "Gb76TgCUqAY", "t-E2gm0a_N0", "mXiFHDfvn4A", "wVzvXW9bo5U", "hToe5L41y6c", "uhjtjOUsQ6c", "2w6udgiojlE",
-    "ajOCGskHs2A", "ygkIMT4vsTE", "n0tWINt8Ofk", "T3CunfPYkME", "SxVNOnPyvIU", "ISCFeQ7963A"];
-const postPunkIds =["6qHClRnSQYM", "l03ybrIMxKo", "JRiSdAe8sGY", "rW43Sq4Rgjo", "c7rsPaDXtng", "N5an4_Iw7ZU", "tkOr12AQpnU",
-    "VaMU_6sI3j8", "iAmZPxuMHsc", "kfFhOsjz7jc", "2XzXLzA2Hrc", "k-lg3v4HtBA", "OMMlPs0O2rw", "Ncq7I-EHQ0Q", "PCZ2Dp6Is9M",
-    "j1-xRk6llh4", "XV765LFwHJE", "uIYo1okOm9U", "UzPh89tD5pA", "ImIESKQKKJo", "5BIElTtN6Fs"];
-
-class Song {
-  /**
-   * @param {string} id ID for YouTube video of song
-   * @param {string} title Song title
-   */
-  constructor(id, title) {
-    this.id = id;
-    this.title = title;
+export const genres = [
+  {"genreName":"hip-hop",
+    "songs":[
+      {"id":"HdOhwPovkHI","title":"Check yo self - ice cube"},
+      {"id":"CXdTShfFPYM","title":"Tierra Whack - only child"},
+      {"id":"Wzurw1w3AjY","title":"Gold teeth - blood orange"},
+      {"id":"FUXX55WqYZs","title":"Who dat boy - tyler, the creator"},
+      {"id":"iOtRxcTMsHc","title":"Poetic justice - kendrick lamar"},
+      {"id":"XXMHQ410P-c","title":"Solo (reprise) - frank ocean"},
+      {"id":"t5gh4uX-X40","title":"Bank - earthgang"},
+      {"id":"0yCJs3GrjpE","title":"It ain’t hard to tell - nas"},
+      {"id":"F-4KiszXxHM","title":"Jazz - mick jenkins"},
+      {"id":"4cucHc2vef4","title":"Boogie - brockhampton"},
+      {"id":"aIXyKmElvv8","title":"Ready or not - fugees"},
+      {"id":"F2r-8fd1jVE","title":"Wax on - injury reserve"},
+      {"id":"AC4bb9Q9-04","title":"King kunta - kendrick lamar"},
+      {"id":"tYVebHOrlZU","title":"Self - noname"},
+      {"id":"f--ZuvER98U","title":"Casket pretty - noname"},
+      {"id":"8KxXsQjJsIw","title":"Bissonnet - maxo kream"},
+      {"id":"zI19cWqsLhA","title":"Pimp tha pen - dj screw"},
+      {"id":"lDWeob50YY8","title":"Realer - Megan Thee Stallion"},
+      {"id":"sTTU-T9-RTs","title":"Rnp - ybn cordae"},
+      {"id":"OJyy_stKS9c","title":"Mood - rico nasty"},
+      {"id":"1og6jfhUPxE","title":"Cheat code - rico nasty"}
+    ]
+  },
+  {"genreName":"rb",
+    "songs":[
+      {"id":"lnUV4cz0gv8","title":"Cranes in the Sky - Solange"},
+      {"id":"OxdCR6wwoXs","title":"Diddy Bop - Noname"},
+      {"id":"lovts-q5s0s","title":"Come Over - the internet"},
+      {"id":"vT02Lo5WhLI","title":"Whipped cream - ari lennox"},
+      {"id":"YzI76YfVXD4","title":"4 leaf clover - ravyn lenae"},
+      {"id":"kobOjAkSrhk","title":"Nothing burns like the cold - snoh allegra"},
+      {"id":"pvU4b4N1-QU","title":"Dear april - frank ocean"},
+      {"id":"TftBcX-kCQc","title":"Do u wrong - leven kali"},
+      {"id":"9G-vhg8T2rc","title":"Hair down - sir"},
+      {"id":"DBkjjuAoajY","title":"Petrol bliss - choker"},
+      {"id":"7HiB-hNt_mw","title":"Florence - loyle carner"},
+      {"id":"6Fc4QwsTz_g","title":"Shades of blue - kelsey lu"},
+      {"id":"i9PmsucjHrM","title":"Color theory - kari faux"},
+      {"id":"NclTIViKiyE","title":"George-arlo parks"},
+      {"id":"6UpjbnDfbRU","title":"Good for you - blood orange"},
+      {"id":"3xotpsdLS6c","title":"Headaches - raveena"},
+      {"id":"dta4heZacZE","title":"Polly - moses sumney"},
+      {"id":"opRwZJsOe0w","title":"Montego bae - noname"},
+      {"id":"uzS3WG6__G4","title":"Pink and white frank ocean"},
+      {"id":"HK90QhbzIkw","title":"Wikipedia - jean deaux"},
+      {"id":"jEvv2PR0ZeI","title":"Sticky - raven lenae"},
+      {"id":"cXITfPnI__o","title":"Grey luh - berhana"},
+      {"id":"BS0rGNEdGzs","title":"Self importance - kilo kish"}
+    ]
+  },
+  {"genreName":"funk",
+    "songs":[
+      {"id":"ftdZ363R9kQ","title":"Superstition - Stevie Wonder"},
+      {"id":"S6Y1gohk5-A","title":"Purple Rain - Prince"},
+      {"id":"l7vRSu_wsNc","title":"Raspberry Beret - Prince"},
+      {"id":"MhC_iLBrSUY","title":"What’s Going On - Marvin Gaye"},
+      {"id":"HhPu6GEoad8","title":"Brick House - Commodores"},
+      {"id":"ALzISTfdXpQ","title":"I Got to Groove - Tower of Power"},
+      {"id":"vuDCi5neNMM","title":"Tell Me Something Good - Rufus and Chaka Khan"},
+      {"id":"NOa5UOHdwnc","title":"Thank You (Falettinme Be Mice Elf Agin) - Sly & the Family Stone"},
+      {"id":"T1NW57lk5fY","title":"Maggot Brain - Funkadelic"},
+      {"id":"50W9W0RHvwI","title":"Move on Up - The Dynamics"},
+      {"id":"yURRmWtbTbo","title":"Don’t Stop ‘Til You Get Enough - Michael Jackson"},
+      {"id":"6To0fvX_wFA","title":"Signed, Sealed, Delivered (I'm Yours) - Stevie Wonder"},
+      {"id":"EnNgASBdCeo","title":"Sir Duke - Stevie Wonder"},
+      {"id":"oTUSeac7IuQ","title":"When Doves Cry - Prince"},
+      {"id":"C02SFbc4zmM","title":"Daddy Rich - Rose Royce"},
+      {"id":"42YGprrAOj0","title":"Sing a Simple Song - Sly & the Family Stone"},
+      {"id":"qchPLaiKocI","title":"Get Down On It - Kool & the Gang"},
+      {"id":"JTvlujbJ5vg","title":"Play that Funky Music - Wild Cherry"},
+      {"id":"5SrQ9graFWQ","title":"Get Up (I Feel Like Being A) Sex Machine - James Brown"},
+      {"id":"71l85z2bXAs","title":"Papa Was a Rolling Stone - the Temptations"},
+      {"id":"eAk3ayxi8Gk","title":"Water No Get Enemy - Fela Kuti"}
+    ]
+  },
+  {"genreName":"bedroom-pop",
+    "songs":[
+      {"id":"Mf5XrSuQ4R8","title":"Grandfather Clock - Thea"},
+      {"id":"2p7m2iY-WSY","title":"Hit Me Up - Omar Apollo"},
+      {"id":"A0gpfwZP_To","title":"Ugotme - Omar Apollo"},
+      {"id":"WMp0ZyQWKf4","title":"Foolsong - Still Woozy"},
+      {"id":"GYEKlxUty84","title":"B Cool - MaGroove"},
+      {"id":"dvWZt6SuNtI","title":"Eternally 12 - Melanie Faye"},
+      {"id":"zC3GHcPN4EQ","title":"Paradise - Rex Orange County"},
+      {"id":"sTQNJT7OZew","title":"If You Want To - beabadoobee"},
+      {"id":"L9HYJbe9Y18","title":"Bags - Clairo"},
+      {"id":"L9l8zCOwEII","title":"Sofia - Clairo"},
+      {"id":"SRbzuwYMyDE","title":"Flaming Hot Cheetos - Clairo"},
+      {"id":"QkeehQ8D_VM","title":"Hello? - Clairo"},
+      {"id":"oFYOxVeQBTo","title":"Drowsy - Banes World"},
+      {"id":"GM8YDU6ZjBw","title":"Gap in the Clouds - Yellow Days"},
+      {"id":"7VVLDCR4wPM","title":"Know Love - Rex Orange County"},
+      {"id":"xqC--4paOTM","title":"Can’t be // How u feel - Billy Lemos"},
+      {"id":"5ohMAVDUswQ","title":"Dreamz - Sara King"},
+      {"id":"qTe6toWNC6s","title":"Smoke Song Interlude - Sebastian Roca"},
+      {"id":"OeCS-DZsgKM","title":"Moon Undah Water - Puma Blue"},
+      {"id":"jCkBxmPbohk","title":"Midnight Blue - Puma Blue"},
+      {"id":"WMp0ZyQWKf4","title":"Foolsong - Still Woozy"},
+      {"id":"F_8XzWXleoY","title":"Lucy - Still Woozy"},
+      {"id":"V0X-SWiDr1g","title":"Sunflower - Rex Orange County"}
+    ]
+  },
+  {"genreName":"neo-soul",
+    "songs":[
+      {"id":"6giKIu5jUvA","title":"Almeda - Solange"},
+      {"id":"T6QKqFPRZSA","title":"Doo wop - lauryn hill"},
+      {"id":"_W14wK4QGh4","title":"Stay flo - solange"},
+      {"id":"D7rm9t5S4uE","title":"Ascension - maxwell"},
+      {"id":"0a4PD4SwEAs","title":"Song 32 - noname"},
+      {"id":"0ZARYxRmNWg","title":"Love is stronger than pride - solange"},
+      {"id":"OQuQV6u8-tk","title":"Jailer - Asa"},
+      {"id":"2j4qvVyRgRk","title":"Out my mind, just in time - erykah badu"},
+      {"id":"Gb76TgCUqAY","title":"Are We Still Friends - tyler the creator"},
+      {"id":"t-E2gm0a_N0","title":"Earfquake - tyler the creator"},
+      {"id":"mXiFHDfvn4A","title":"Moon river - frank ocean"},
+      {"id":"wVzvXW9bo5U","title":"Can’t take my eyes off you - lauryn hill"},
+      {"id":"hToe5L41y6c","title":"Get up - amel larrieux"},
+      {"id":"uhjtjOUsQ6c","title":"Culture - kaytranada"},
+      {"id":"2w6udgiojlE","title":"Sweet Love - Anita baker"},
+      {"id":"ajOCGskHs2A","title":"What you need - kaytranada"},
+      {"id":"ygkIMT4vsTE","title":"Whathegirlmuthafuckinwannadoo - the coup"},
+      {"id":"n0tWINt8Ofk","title":"I want war (but i need peace) - kali uchis"},
+      {"id":"T3CunfPYkME","title":"The charade - d’angelo"},
+      {"id":"SxVNOnPyvIU","title":"How does it feel - d’angelo"},
+      {"id":"ISCFeQ7963A","title":"Back to the future (part i) - d’angelo"},
+      {"id":"xRzbLQ_WKPs","title":"Dark red - steve lacy"},
+      {"id":"KTh8ermjdbI","title":"Some - steve lacy"}
+    ]
+  },
+  {"genreName":"post-punk",
+    "songs":[
+      {"id":"6qHClRnSQYM","title":"Punks - Matt Champion"},
+      {"id":"l03ybrIMxKo","title":"Fangs - matt champion"},
+      {"id":"JRiSdAe8sGY","title":"Call this # now - the garden"},
+      {"id":"rW43Sq4Rgjo","title":"Stylish spit - the garden"},
+      {"id":"c7rsPaDXtng","title":"All access - the garden"},
+      {"id":"N5an4_Iw7ZU","title":"Clench to stay awake - the garden"},
+      {"id":"tkOr12AQpnU","title":"Bizarre love triangle - new order"},
+      {"id":"VaMU_6sI3j8","title":"Neat neat neat - the damned"},
+      {"id":"iAmZPxuMHsc","title":"Emergency blimp - king krule"},
+      {"id":"kfFhOsjz7jc","title":"Vidual - king krule"},
+      {"id":"2XzXLzA2Hrc","title":"Half man half shark - king krule"},
+      {"id":"k-lg3v4HtBA","title":"Comet face - king krule"},
+      {"id":"OMMlPs0O2rw","title":"Blue train lines - mount kimbie"},
+      {"id":"Ncq7I-EHQ0Q","title":"Midnight 01 (deep sea diver) - king krule"},
+      {"id":"PCZ2Dp6Is9M","title":"Heads will roll - yeah yeah yeahs"},
+      {"id":"j1-xRk6llh4","title":"Wolf like me - tv on the radio"},
+      {"id":"XV765LFwHJE","title":"Tenement roofs - glorious din"},
+      {"id":"uIYo1okOm9U","title":"Big joanie - dream no 9"},
+      {"id":"UzPh89tD5pA","title":"Rip it up - orange juice"},
+      {"id":"ImIESKQKKJo","title":"Blister in the sun - violent femmes"},
+      {"id":"5BIElTtN6Fs","title":"Disorder - joy division"}
+    ]
   }
-}
-
-class Genre {
-  /**
-   * @param {string} genreName Title of the genre
-   * @param {Song[]} songs List of songs in the genre
-   */
-  constructor(genreName, songs) {
-    this.genreName = genreName;
-    this.songs = songs;
-  }
-}
-
-const hipHopSongs = [];
-const rAndBSongs = [];
-const funkSongs = [];
-const bedroomPopSongs = [];
-const neoSoulSongs = [];
-const postPunkSongs = [];
-
-function populateSongArrays(songArray, idArray, titleArray) {
-  for (let i=0; i<titleArray.length; i++) {
-    songArray.push(new Song(idArray[i], titleArray[i]));
-  }
-}
-
-populateSongArrays(hipHopSongs, hipHopIds, hipHop);
-populateSongArrays(rAndBSongs, rAndBIds, rAndB);
-populateSongArrays(funkSongs, funkIds, funk);
-populateSongArrays(bedroomPopSongs, bedroomPopIds, bedroomPop);
-populateSongArrays(neoSoulSongs, neoSoulIds, neoSoul);
-populateSongArrays(postPunkSongs, postPunkIds, postPunk);
-
-// Populate map and genre array
-const genreToListMap = new Map([['hip-hop', hipHopSongs], ['rb', rAndBSongs],
-    ['funk', funkSongs], ['bedroom-pop', bedroomPopSongs],
-    ['neo-soul', neoSoulSongs], ['post-punk', postPunkSongs]]);
-
-const genres = [];
-genreToListMap.forEach(function(value, key) {
-    genres.push(new Genre(key, value));
-})
-
-export {genres};
+];
