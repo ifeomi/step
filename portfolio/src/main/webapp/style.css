@@ -38,3 +38,7 @@ img {
 .card-img-top, .card {
   max-width: 500px;
 }
+
+span.title {
+  font-style: italic;
+}

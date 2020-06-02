@@ -14,7 +14,7 @@ const postPunk = ["Punks - Matt Champion", "Fangs - matt champion", "Call this #
 const hipHopIds = ["HdOhwPovkHI", "CXdTShfFPYM", "Wzurw1w3AjY", "FUXX55WqYZs", "iOtRxcTMsHc", "XXMHQ410P-c", "t5gh4uX-X40",
     "0yCJs3GrjpE", "F-4KiszXxHM", "4cucHc2vef4", "aIXyKmElvv8", "F2r-8fd1jVE", "AC4bb9Q9-04", "tYVebHOrlZU", "f--ZuvER98U",
     "8KxXsQjJsIw", "zI19cWqsLhA", "lDWeob50YY8", "sTTU-T9-RTs", "OJyy_stKS9c", "1og6jfhUPxE"];
-const rbIds = ["lnUV4cz0gv8", "OxdCR6wwoXs", "lovts-q5s0s", "vT02Lo5WhLI", "YzI76YfVXD4", "kobOjAkSrhk", "pvU4b4N1-QU", 
+const rAndBIds = ["lnUV4cz0gv8", "OxdCR6wwoXs", "lovts-q5s0s", "vT02Lo5WhLI", "YzI76YfVXD4", "kobOjAkSrhk", "pvU4b4N1-QU", 
     "TftBcX-kCQc", "9G-vhg8T2rc", "DBkjjuAoajY", "7HiB-hNt_mw", "6Fc4QwsTz_g", "i9PmsucjHrM", "NclTIViKiyE", "6UpjbnDfbRU",
     "3xotpsdLS6c", "dta4heZacZE", "opRwZJsOe0w", "uzS3WG6__G4", "HK90QhbzIkw", "jEvv2PR0ZeI"];
 const funkIds = ["ftdZ363R9kQ", "S6Y1gohk5-A", "l7vRSu_wsNc", "MhC_iLBrSUY", "HhPu6GEoad8", "ALzISTfdXpQ", "vuDCi5neNMM",
@@ -30,21 +30,56 @@ const postPunkIds =["6qHClRnSQYM", "l03ybrIMxKo", "JRiSdAe8sGY", "rW43Sq4Rgjo", 
     "VaMU_6sI3j8", "iAmZPxuMHsc", "kfFhOsjz7jc", "2XzXLzA2Hrc", "k-lg3v4HtBA", "OMMlPs0O2rw", "Ncq7I-EHQ0Q", "PCZ2Dp6Is9M",
     "j1-xRk6llh4", "XV765LFwHJE", "uIYo1okOm9U", "UzPh89tD5pA", "ImIESKQKKJo", "5BIElTtN6Fs"];
 
-// Populate maps
-const genreToListMap = new Map();
-const genreToIdList = new Map();
+class Song {
+  /**
+   * @param {string} id ID for YouTube video of song
+   * @param {string} title Song title
+   */
+  constructor(id, title) {
+    this.id = id;
+    this.title = title;
+  }
+}
 
-genreToListMap.set('hip-hop', hipHop);
-genreToListMap.set('rb', rAndB);
-genreToListMap.set('funk', funk);
-genreToListMap.set('bedroom-pop', bedroomPop);
-genreToListMap.set('neo-soul', neoSoul);
-genreToListMap.set('post-punk', postPunk);
-genreToIdList.set('hip-hop', hipHopIds);
-genreToIdList.set('rb', rbIds);
-genreToIdList.set('funk', funkIds);
-genreToIdList.set('bedroom-pop', bedroomPopIds);
-genreToIdList.set('neo-soul', neoSoulIds);
-genreToIdList.set('post-punk', postPunkIds);
+class Genre {
+  /**
+   * @param {string} genreName Title of the genre
+   * @param {Song[]} songs List of songs in the genre
+   */
+  constructor(genreName, songs) {
+    this.genreName = genreName;
+    this.songs = songs;
+  }
+}
 
-export {genreToListMap, genreToIdList};
+const hipHopSongs = [];
+const rAndBSongs = [];
+const funkSongs = [];
+const bedroomPopSongs = [];
+const neoSoulSongs = [];
+const postPunkSongs = [];
+
+function populateSongArrays(songArray, idArray, titleArray) {
+  for (let i=0; i<titleArray.length; i++) {
+    songArray.push(new Song(idArray[i], titleArray[i]));
+  }
+}
+
+populateSongArrays(hipHopSongs, hipHopIds, hipHop);
+populateSongArrays(rAndBSongs, rAndBIds, rAndB);
+populateSongArrays(funkSongs, funkIds, funk);
+populateSongArrays(bedroomPopSongs, bedroomPopIds, bedroomPop);
+populateSongArrays(neoSoulSongs, neoSoulIds, neoSoul);
+populateSongArrays(postPunkSongs, postPunkIds, postPunk);
+
+// Populate map and genre array
+const genreToListMap = new Map([['hip-hop', hipHopSongs], ['rb', rAndBSongs],
+    ['funk', funkSongs], ['bedroom-pop', bedroomPopSongs],
+    ['neo-soul', neoSoulSongs], ['post-punk', postPunkSongs]]);
+
+const genres = [];
+genreToListMap.forEach(function(value, key) {
+    genres.push(new Genre(key, value));
+})
+
+export {genres};

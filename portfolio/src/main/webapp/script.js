@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {genreToListMap, genreToIdList} from './genre_constants.js';
+import {genres} from './genre_constants.js';
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -75,21 +75,20 @@ function generatePlaylist() {
   let playlistIds = [];
   let generatedIndexes = [];
   for (let i = 0; i < selectedGenres.length; i++) {
-    const genreSongs = genreToListMap.get(selectedGenres[i]);
-    const genreIds = genreToIdList.get(selectedGenres[i]);
-    const indexes = [...Array(genreSongs.length).keys()];
-    const shuffledIndixes = shuffle(indexes);
+    const selectedGenre = genres.find(({genreName}) => genreName === selectedGenres[i]);
+    const genreSongs = selectedGenre.songs;
+    const indexes = shuffle([...Array(genreSongs.length).keys()]);
     
     if (i !== selectedGenres.length-1) {
-      generatedIndexes = shuffledIndixes.slice(0, songsPerGenre);
+      generatedIndexes = indexes.slice(0, songsPerGenre);
     }
     else {
-      generatedIndexes = shuffledIndixes.slice(0, songsPerGenre + numRemaining);
+      generatedIndexes = indexes.slice(0, songsPerGenre + numRemaining);
     }
     
     for (let j = 0; j < generatedIndexes.length; j++) {
-      playlistStrings.push(genreSongs[generatedIndexes[j]]);
-      playlistIds.push(genreIds[generatedIndexes[j]]);
+      playlistStrings.push(genreSongs[j].title);
+      playlistIds.push(genreSongs[j].id);
     }
   }
 
