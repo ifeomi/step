@@ -11,7 +11,7 @@
     <script src="script.js"></script>
     <title>Ife Omidiran</title>
   </head>
-  <body>
+  <body onload="addComments()">
     <header>
       <nav class="navbar navbar-expand-lg navbar-light container">
         <a class="navbar-brand" href="index.html">ife omidiran</a>
@@ -65,10 +65,14 @@
         <li>EP (Engineering Practicum) Intern @ Google NYC</li>
         <li>Campus Marketing Director @ Bumble</li>
       </ul>
-      <button type="button" class="btn btn-dark mb-3" onclick="addComments()">
-        View comments!
-      </button>
-      <div id="comments-container"></div>
+      <div id="comments-container" class="mb-2"></div>
+      <form action="/data" method="POST">
+        <div class="form-group">
+          <label for="comment-box">Leave a comment</label>
+          <textarea class="form-control" id="comment-box" name="comment-box"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
     </div>
     
     <footer class="navbar footer navbar-light bg-light mt-5">
