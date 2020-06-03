@@ -1,2 +1,8 @@
 target/
 .idea
+
+# IDE (Visual Studio)
+*.prefs
+*.classpath
+*.project
+*.factorypath
