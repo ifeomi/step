@@ -11,7 +11,7 @@
     <script src="script.js" type="module"></script>
     <title>Ife Omidiran</title>
   </head>
-  <body onload="addComments()">
+  <body>
     <header>
       <nav class="navbar navbar-expand-lg navbar-light container">
         <a class="navbar-brand" href="index.html">ife omidiran</a>
@@ -68,8 +68,10 @@
       <div id="comments-container" class="mb-2"></div>
       <form action="/data" method="POST">
         <div class="form-group">
-          <label for="comment-box">Leave a comment</label>
-          <textarea class="form-control" id="comment-box" name="comment-box"></textarea>
+          <label for="name">Name</label>
+          <input class="form-control" id="name" name="name">
+          <label for="message">Leave a comment</label>
+          <textarea class="form-control" id="message" name="message"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Send</button>
       </form>

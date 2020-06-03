@@ -14,9 +14,11 @@
 
 package com.google.sps.servlets;
 
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.google.gson.Gson;
 import javax.servlet.http.HttpServlet;
@@ -27,14 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> comments;
+  private List<Comment> comments;
 
   @Override
   public void init() {
     comments = new ArrayList<>();
-    comments.add("London");
-    comments.add("Tokyo");
-    comments.add("Abuja");
   }
 
   @Override
@@ -42,8 +41,17 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(convertToJsonUsingGson(comments));
   }
-  
-  private String convertToJsonUsingGson(List<String> array) {
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String author = request.getParameter("name");
+    Date timestamp = new Date();
+    String message = request.getParameter("message");
+    Comment comment = new Comment(author, timestamp, message);
+    comments.add(0, comment);
+    response.sendRedirect("/index.html");
+  }
+  private String convertToJsonUsingGson(List<Comment> array) {
     Gson gson = new Gson();
     String json = gson.toJson(array);
     return json;
