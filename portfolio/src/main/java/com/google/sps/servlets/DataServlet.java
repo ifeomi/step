@@ -65,6 +65,7 @@ public class DataServlet extends HttpServlet {
     comments.add(0, comment);
     response.sendRedirect("/index.html");
   }
+
   private String convertToJsonUsingGson(List<Comment> array) {
     Gson gson = new Gson();
     String json = gson.toJson(array);
