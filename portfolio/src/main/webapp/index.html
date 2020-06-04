@@ -65,10 +65,16 @@
         <li>EP (Engineering Practicum) Intern @ Google NYC</li>
         <li>Campus Marketing Director @ Bumble</li>
       </ul>
-      <button type="button" class="btn btn-dark mb-3" onclick="addComments()">
-        View comments!
-      </button>
-      <div id="comments-container"></div>
+      <div id="comments-container" class="mb-2"></div>
+      <form action="/data" method="POST">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input class="form-control" id="name" name="name">
+          <label for="message">Leave a comment</label>
+          <textarea class="form-control" id="message" name="message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
     </div>
     
     <footer class="navbar footer navbar-light bg-light mt-5">

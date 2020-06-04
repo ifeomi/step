@@ -33,14 +33,19 @@ function shuffle(array) {
 function makeUL(array, ulClass, liClass) {
   const list = document.createElement('ul');
   if (ulClass !== null) {
-    list.classList.add(ulClass);
+    list.className = ulClass;
   }
   for (let i = 0; i < array.length; i++) {
     const item = document.createElement('li');
     if (liClass !== null) {
-      item.classList.add(liClass);
+      item.className = liClass;
     }
-    item.appendChild(document.createTextNode(array[i]));
+    if (typeof(array[i]) === "object") {
+      item.appendChild(array[i]);
+    }
+    else {
+      item.appendChild(document.createTextNode(array[i]));
+    }
     list.appendChild(item);
   }
 
@@ -107,9 +112,9 @@ function generatePlaylist() {
     playlistContainer.removeChild(playlistContainer.childNodes[0]);
   }
 
-  const heading = document.createElement('h2');
+  const heading = document.createElement("h2");
   heading.innerText = "Here are your tunes:";
-  const playlistLink = document.createElement('a');
+  const playlistLink = document.createElement("a");
   playlistLink.className = "btn btn-primary mb-2";
   playlistLink.href = playlistUrl;
   playlistLink.innerText = "YouTube Playlist";
@@ -120,14 +125,47 @@ function generatePlaylist() {
   playlistContainer.appendChild(makeUL(playlistStrings));
 }
 
-document.getElementById('playlistSubmit').addEventListener('click', generatePlaylist);
+if (document.getElementById('playlistSubmit') !== null) {
+  document.getElementById('playlistSubmit').addEventListener('click', generatePlaylist);
+}
+
+/**
+ * Converts JS object representing a comment to a HTML card
+ * @param Object comment 
+ */
+function commentToHTMLElement(comment) {
+  const card = document.createElement("div");
+  card.className = "card";
+  const cardBody = document.createElement("div");
+  cardBody.className = "card-body";
+  const author = document.createElement("h5");
+  author.className = "card-title";
+  author.innerText = comment.author;
+  const timestamp = document.createElement("h6");
+  timestamp.className = "card-subtitle mb-2 text-muted";
+  timestamp.innerText = comment.timestamp;
+  const message = document.createElement("p");
+  message.className = "card-text";
+  message.innerText = comment.message;
+  
+  card.appendChild(cardBody);
+  cardBody.appendChild(author);
+  cardBody.appendChild(timestamp);
+  cardBody.appendChild(message);
+  
+  return card;
+}
 
 /**
  * Add comments to DOM
  */
 function addComments() {
+  console.log("adding comments!");
   fetch('/data').then(response => response.json()).then((comments) => {
     const commentContainer = document.getElementById('comments-container');
-    commentContainer.appendChild(makeUL(comments, "list-group", "list-group-item"));
+    commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
+        "list-group list-group-flush", "list-group-item"));
   });
 }
+
+window.addEventListener('load', addComments)
