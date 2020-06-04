@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {genres} from './genre_constants.js';
+import { genres } from "./genre_constants.js";
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -31,12 +31,12 @@ function shuffle(array) {
  * Makes unordered list from array.
  */
 function makeUL(array, ulClass, liClass) {
-  const list = document.createElement('ul');
+  const list = document.createElement("ul");
   if (ulClass !== null) {
     list.className = ulClass;
   }
   for (let i = 0; i < array.length; i++) {
-    const item = document.createElement('li');
+    const item = document.createElement("li");
     if (liClass !== null) {
       item.className = liClass;
     }
@@ -57,21 +57,27 @@ function makeUL(array, ulClass, liClass) {
  */
 function validateForm(form) {
   const valid = form.checkValidity();
-  form.classList.add('was-validated');
+  form.classList.add("was-validated");
   return valid;
+}
+
+function removeChildren(element) {
+  while (element.hasChildNodes()) {
+    element.removeChild(element.childNodes[0]);
+  }
 }
 
 /**
  * Generates a playlist based on selected genres and number of songs.
  */
 function generatePlaylist() {
-  const playlistForm = document.getElementById('playlistForm');
+  const playlistForm = document.getElementById("playlistForm");
   if (validateForm(playlistForm) === false) {
     return;
   }
 
   // Get user selections
-  const selectElement = document.getElementById('genreSelect');
+  const selectElement = document.getElementById("genreSelect");
   let selectedGenres = Array.from(selectElement.selectedOptions)
       .map(option => option.value);
   const playlistLength = document.getElementById("playlist-length").value;
@@ -107,10 +113,8 @@ function generatePlaylist() {
   playlistUrl += playlistIds.join();
 
   // Remove previous playlist from page and add new one
-  const playlistContainer = document.getElementById('playlist-container');
-  while (playlistContainer.hasChildNodes()) {
-    playlistContainer.removeChild(playlistContainer.childNodes[0]);
-  }
+  const playlistContainer = document.getElementById("playlist-container");
+  removeChildren(playlistContainer);
 
   const heading = document.createElement("h2");
   heading.innerText = "Here are your tunes:";
@@ -125,8 +129,8 @@ function generatePlaylist() {
   playlistContainer.appendChild(makeUL(playlistStrings));
 }
 
-if (document.getElementById('playlistSubmit') !== null) {
-  document.getElementById('playlistSubmit').addEventListener('click', generatePlaylist);
+if (document.getElementById("playlistSubmit") !== null) {
+  document.getElementById("playlistSubmit").addEventListener("click", generatePlaylist);
 }
 
 /**
@@ -159,13 +163,19 @@ function commentToHTMLElement(comment) {
 /**
  * Add comments to DOM.
  */
-function addComments() {
+function addComments(numComments) {
   getLoginStatus();
-  fetch('/data').then(response => response.json()).then((comments) => {
-    const commentContainer = document.getElementById('comments-container');
-    while (commentContainer.hasChildNodes()) {
-      commentContainer.removeChild(commentContainer.childNodes[0]);
-    }
+  
+  const defaultNum = "5";
+
+  if (numComments === undefined) {
+    numComments = defaultNum;
+  }
+  
+  const commentContainer = document.getElementById("comments-container");
+  removeChildren(commentContainer);
+
+  fetch("/data?max=" + numComments).then(response => response.json()).then((comments) => {
     commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
         "list-group list-group-flush", "list-group-item"));
   });
@@ -194,8 +204,18 @@ function deleteComments() {
   fetch(request).then(addComments());
 }
 
-window.addEventListener('load', addComments)
+window.addEventListener('load', function() {
+  addComments();
+});
 
 if (document.getElementById('deleteComments') !== null) {
   document.getElementById('deleteComments').addEventListener('click', deleteComments);
+}
+
+if (document.getElementById("maxComments") !== null) {
+  const maxCommentsSelect = document.getElementById("maxComments");
+  maxCommentsSelect.addEventListener("change", function() {
+    const numComments = maxCommentsSelect.value;
+    addComments(numComments);
+  });
 }

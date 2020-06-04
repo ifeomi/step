@@ -31,9 +31,9 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
@@ -48,18 +48,21 @@ public class CommentServlet extends HttpServlet {
   private Key homepageCommentKey = KeyFactory.createKey("Comments", "homepage comments");
   private UserService userService = UserServiceFactory.getUserService();
   private String userEmail;
+  private int max;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // If there's no max parameter, load all the comments
+    max = request.getParameter("max") != null ? Integer.parseInt(request.getParameter("max")) : Integer.MAX_VALUE;
     Query query = new Query(entityKind).setAncestor(homepageCommentKey)
                       .addSort("timestamp", SortDirection.DESCENDING);
-    PreparedQuery results = datastore.prepare(query);
-
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(max));
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    
+    for (Entity entity : results) {
       comments.add(entityToComment(entity));
     }
-
+    
     response.setContentType("application/json;");
     response.getWriter().println(convertToJsonUsingGson(comments));
   }
