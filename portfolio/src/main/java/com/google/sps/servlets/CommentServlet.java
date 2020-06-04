@@ -39,7 +39,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
-/** Servlet that returns some example content. */
+/** Servlet that returns comments data */
 @WebServlet("/data")
 public class CommentServlet extends HttpServlet {
 
