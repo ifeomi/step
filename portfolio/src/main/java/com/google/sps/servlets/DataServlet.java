@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -39,10 +41,12 @@ public class DataServlet extends HttpServlet {
 
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private String entityKind = "Comment";
+  private Key homepageCommentKey = KeyFactory.createKey("Comments", "homepage comments");
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query(entityKind).addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query(entityKind).setAncestor(homepageCommentKey)
+                      .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments = new ArrayList<>();
@@ -57,7 +61,6 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     datastore.put(commentRequestToEntity(request));
-
     response.sendRedirect("/index.html");
   }
 
@@ -81,7 +84,7 @@ public class DataServlet extends HttpServlet {
     Date timestamp = new Date();
     String message = request.getParameter("message");
 
-    Entity commentEntity = new Entity(entityKind);
+    Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
     commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("message", message);
