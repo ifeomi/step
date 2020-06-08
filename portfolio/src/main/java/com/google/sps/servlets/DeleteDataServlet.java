@@ -37,8 +37,12 @@ public class DeleteDataServlet extends HttpServlet{
     }
 
     else {
-      Key key = KeyFactory.stringToKey(request.getParameter("key"));
-      datastore.delete(key);
+      try {
+        Key key = KeyFactory.stringToKey(request.getParameter("key"));
+        datastore.delete(key);
+      } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+      }
     }
   }
 }
