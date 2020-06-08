@@ -157,13 +157,15 @@ function commentToHTMLElement(comment) {
 }
 
 /**
- * Add comments to DOM
+ * Add comments to DOM.
  */
 function addComments() {
-  console.log("adding comments!");
   getLoginStatus();
   fetch('/data').then(response => response.json()).then((comments) => {
     const commentContainer = document.getElementById('comments-container');
+    while (commentContainer.hasChildNodes()) {
+      commentContainer.removeChild(commentContainer.childNodes[0]);
+    }
     commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
         "list-group list-group-flush", "list-group-item"));
   });
@@ -184,4 +186,16 @@ function getLoginStatus() {
   });
 }
 
+/**
+ * Delete all comments from the DOM.
+ */
+function deleteComments() {
+  const request = new Request('/delete-data', {method: 'POST'});
+  fetch(request).then(addComments());
+}
+
 window.addEventListener('load', addComments)
+
+if (document.getElementById('deleteComments') !== null) {
+  document.getElementById('deleteComments').addEventListener('click', deleteComments);
+}
