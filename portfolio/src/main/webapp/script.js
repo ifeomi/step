@@ -161,10 +161,26 @@ function commentToHTMLElement(comment) {
  */
 function addComments() {
   console.log("adding comments!");
+  getLoginStatus();
   fetch('/data').then(response => response.json()).then((comments) => {
     const commentContainer = document.getElementById('comments-container');
     commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
         "list-group list-group-flush", "list-group-item"));
+  });
+}
+
+function getLoginStatus() {
+  fetch("/login").then(response => response.json()).then((status) => {
+    if (status.loggedIn) {
+      document.getElementById("comment-form").style.display = "block";
+      document.getElementById("login-container").innerHTML = 
+          "<p>You are logged in as " + status.email + ". Log out <a href=\""
+          + status.url + "\">here</a>.</p>";
+
+    } else {
+      document.getElementById("login-container").innerHTML = 
+          "<p>Log in <a href=\"" + status.url + "\">here</a> to leave a comment.</p>";
+    }
   });
 }
 

@@ -20,6 +20,9 @@ import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,13 +47,22 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String author = request.getParameter("name");
+    UserService userService = UserServiceFactory.getUserService();
+    
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/index.html");
+      return;
+    }
+    
+    // String author = request.getParameter("name");
+    String author = userService.getCurrentUser().getEmail();
     Date timestamp = new Date();
     String message = request.getParameter("message");
     Comment comment = new Comment(author, timestamp, message);
     comments.add(0, comment);
     response.sendRedirect("/index.html");
   }
+
   private String convertToJsonUsingGson(List<Comment> array) {
     Gson gson = new Gson();
     String json = gson.toJson(array);
