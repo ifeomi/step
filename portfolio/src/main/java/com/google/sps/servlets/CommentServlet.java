@@ -147,8 +147,7 @@ public class CommentServlet extends HttpServlet {
 
   private float analyzeSentiment(String message) {
     Document document = 
-        Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
-    float score = 0f;
+        Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();    float score = 0f;
     try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
       Sentiment sentiment = languageService.analyzeSentiment(document).getDocumentSentiment();
       score = sentiment.getScore();
