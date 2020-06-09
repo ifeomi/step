@@ -140,7 +140,7 @@ function commentToHTMLElement(comment) {
   cardBody.className = "card-body";
   const author = document.createElement("h5");
   author.className = "card-title";
-  author.innerText = comment.author;
+  author.innerHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
   const timestamp = document.createElement("h6");
   timestamp.className = "card-subtitle mb-2 text-muted";
   timestamp.innerText = comment.timestamp;

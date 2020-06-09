@@ -6,17 +6,23 @@ import java.util.Date;
 public final class Comment {
 
   private final String author;
+  private final String email;
   private final Date timestamp;
   private final String message;
 
-  public Comment(String author, Date timestamp, String message) {
+  public Comment(String author, String email, Date timestamp, String message) {
     this.author = author;
+    this.email = email;
     this.timestamp = timestamp;
     this.message = message;
   }
 
   public String getAuthor() {
     return author;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   public Date getTimestamp() {

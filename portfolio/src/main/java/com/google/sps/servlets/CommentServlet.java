@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -39,11 +41,18 @@ import com.google.sps.data.Comment;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
-public class DataServlet extends HttpServlet {
+public class CommentServlet extends HttpServlet {
 
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private String entityKind = "Comment";
   private Key homepageCommentKey = KeyFactory.createKey("Comments", "homepage comments");
+  private UserService userService = UserServiceFactory.getUserService();
+  private String userEmail;
+
+  @Override
+  public void init() {
+    userEmail = userService.getCurrentUser().getEmail();
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -62,7 +71,6 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/index.html");
       return;
@@ -82,7 +90,7 @@ public class DataServlet extends HttpServlet {
     Date timestamp = (Date) entity.getProperty("timestamp");
     String message = (String) entity.getProperty("message");
     
-    Comment comment = new Comment(author, timestamp, message);
+    Comment comment = new Comment(author, userEmail, timestamp, message);
     return comment;
   }
 
@@ -93,6 +101,7 @@ public class DataServlet extends HttpServlet {
 
     Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
+    commentEntity.setProperty("email", userEmail);
     commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("message", message);
     return commentEntity;
