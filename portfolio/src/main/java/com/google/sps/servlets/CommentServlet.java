@@ -50,11 +50,6 @@ public class CommentServlet extends HttpServlet {
   private String userEmail;
 
   @Override
-  public void init() {
-    userEmail = userService.getCurrentUser().getEmail();
-  }
-
-  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query(entityKind).setAncestor(homepageCommentKey)
                       .addSort("timestamp", SortDirection.DESCENDING);
@@ -75,6 +70,7 @@ public class CommentServlet extends HttpServlet {
       response.sendRedirect("/index.html");
       return;
     }
+    userEmail = userService.getCurrentUser().getEmail();
     datastore.put(commentRequestToEntity(request));
     response.sendRedirect("/index.html");
   }
@@ -87,10 +83,11 @@ public class CommentServlet extends HttpServlet {
 
   private Comment entityToComment(Entity entity) {
     String author = (String) entity.getProperty("author");
+    String email = (String) entity.getProperty("email");
     Date timestamp = (Date) entity.getProperty("timestamp");
     String message = (String) entity.getProperty("message");
     
-    Comment comment = new Comment(author, userEmail, timestamp, message);
+    Comment comment = new Comment(author, email, timestamp, message);
     return comment;
   }
 
