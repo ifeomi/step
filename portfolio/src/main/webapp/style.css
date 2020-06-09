@@ -42,3 +42,7 @@ img {
 span.title {
   font-style: italic;
 }
+
+#comment-form {
+  display: none;
+}

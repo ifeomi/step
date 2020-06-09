@@ -140,7 +140,7 @@ function commentToHTMLElement(comment) {
   cardBody.className = "card-body";
   const author = document.createElement("h5");
   author.className = "card-title";
-  author.innerText = comment.author;
+  author.innerHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
   const timestamp = document.createElement("h6");
   timestamp.className = "card-subtitle mb-2 text-muted";
   timestamp.innerText = comment.timestamp;
@@ -160,6 +160,7 @@ function commentToHTMLElement(comment) {
  * Add comments to DOM.
  */
 function addComments() {
+  getLoginStatus();
   fetch('/data').then(response => response.json()).then((comments) => {
     const commentContainer = document.getElementById('comments-container');
     while (commentContainer.hasChildNodes()) {
@@ -167,6 +168,21 @@ function addComments() {
     }
     commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
         "list-group list-group-flush", "list-group-item"));
+  });
+}
+
+function getLoginStatus() {
+  fetch("/login").then(response => response.json()).then((status) => {
+    if (status.loggedIn) {
+      document.getElementById("comment-form").style.display = "block";
+      document.getElementById("login-container").innerHTML = 
+          "<p>You are logged in as " + status.email + ". Log out <a href=\""
+          + status.url + "\">here</a>.</p>";
+
+    } else {
+      document.getElementById("login-container").innerHTML = 
+          "<p>Log in <a href=\"" + status.url + "\">here</a> to leave a comment.</p>";
+    }
   });
 }
 
