@@ -38,6 +38,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
@@ -113,8 +116,10 @@ public class CommentServlet extends HttpServlet {
     String email = (String) entity.getProperty("email");
     Date timestamp = (Date) entity.getProperty("timestamp");
     String message = (String) entity.getProperty("message");
+    float sentimentScore = ((Number) entity.getProperty("sentimentScore")).floatValue();
     
-    Comment comment = new Comment(author, email, timestamp, message);
+    Comment comment = 
+        new Comment(author, email, timestamp, message, sentimentScore);
     return comment;
   }
 
@@ -122,12 +127,26 @@ public class CommentServlet extends HttpServlet {
     String author = request.getParameter("name");
     Date timestamp = new Date();
     String message = request.getParameter("message");
+    float sentimentScore = analyzeSentiment(message);
 
     Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
     commentEntity.setProperty("email", userEmail);
     commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("message", message);
+    commentEntity.setProperty("sentimentScore", sentimentScore);
+    
     return commentEntity;
+  }
+
+  private float analyzeSentiment(String message) {
+    Document document = 
+        Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(document).getDocumentSentiment();
+    float magnitude = sentiment.getMagnitude();
+    float score = sentiment.getScore();
+    languageService.close();
+    return score;
   }
 }

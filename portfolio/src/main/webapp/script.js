@@ -150,11 +150,15 @@ function commentToHTMLElement(comment) {
   const message = document.createElement("p");
   message.className = "card-text";
   message.innerText = comment.message;
+  const score = document.createElement("div");
+  score.className = "card-footer text-muted";
+  score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
   cardBody.appendChild(title);
 //   cardBody.appendChild(timestamp);
   cardBody.appendChild(message);
+  cardBody.appendChild(score);
   
   return card;
 }

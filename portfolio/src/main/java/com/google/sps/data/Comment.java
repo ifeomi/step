@@ -9,12 +9,14 @@ public final class Comment {
   private final String email;
   private final Date timestamp;
   private final String message;
+  private final float sentimentScore;
 
-  public Comment(String author, String email, Date timestamp, String message) {
+  public Comment(String author, String email, Date timestamp, String message, float sentimentScore) {
     this.author = author;
     this.email = email;
     this.timestamp = timestamp;
     this.message = message;
+    this.sentimentScore = sentimentScore;
   }
 
   public String getAuthor() {
@@ -31,5 +33,9 @@ public final class Comment {
 
   public String getMessage() {
     return message;
+  }
+
+  public float getSentimentScore() {
+      return sentimentScore;
   }
 }
