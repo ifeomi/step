@@ -139,54 +139,45 @@ if (document.getElementById("playlistSubmit") !== null) {
  */
 function commentToHTMLElement(comment) {
   const card = document.createElement("div");
-  card.className = "card";
+  card.className = "card border-0 my-1";
   const cardBody = document.createElement("div");
   cardBody.className = "card-body";
-  const author = document.createElement("h5");
-  author.className = "card-title";
-  author.innerHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
-  const timestamp = document.createElement("h6");
-  timestamp.className = "card-subtitle mb-2 text-muted";
-  timestamp.innerText = comment.timestamp;
+  const title = document.createElement("h5");
+  title.className = "card-title";
+  let titleHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
+  titleHTML += "&nbsp&nbsp<small class=\"text-muted\">" + comment.timestamp + "</small>";
+  title.innerHTML = titleHTML;
   const message = document.createElement("p");
   message.className = "card-text";
   message.innerText = comment.message;
   
   card.appendChild(cardBody);
-  cardBody.appendChild(author);
-  cardBody.appendChild(timestamp);
+  cardBody.appendChild(title);
+//   cardBody.appendChild(timestamp);
   cardBody.appendChild(message);
   
   return card;
 }
 
-function makePaginationLinks(nextCursor) {
-  const pageNav = document.createElement("nav");
-//   pageNav.dataset.next = nextCursor;
-  const next = document.createElement("button");
-  next.type = "button";
-  next.className = "page-link";
-  next.id = "nextPage";
-  next.dataset.cursor = nextCursor;
-  next.innerText = "Next";
-  next.addEventListener("click", (event) => {
-        console.log("clicked")
-        addComments(5, event.target.dataset.cursor);
-        });
-  const ul = document.createElement("ul");
-  ul.className = "pagination";
-  const li = document.createElement("li");
-  li.className = "page-item";
-  li.appendChild(next);
-  ul.appendChild(li);
-  pageNav.appendChild(ul);
-  return pageNav;
+function addLoadMoreButton(nextCursor) {
+  if (nextCursor === false) {
+    return document.createTextNode("All comments loaded.")
+  }
+  const loadMore = document.createElement("button");
+  loadMore.type = "button";
+  loadMore.className = "btn btn-primary";
+  loadMore.dataset.cursor = nextCursor;
+  loadMore.innerText = "Load more";
+  loadMore.addEventListener("click", (event) => {
+    addComments(5, event.target.dataset.cursor, false);
+  });
+  return loadMore;
 }
 
 /**
  * Add comments to DOM.
  */
-function addComments(numComments, cursor) {
+function addComments(numComments, cursor, clear) {
   getLoginStatus();
   
   const defaultNum = "5";
@@ -194,13 +185,22 @@ function addComments(numComments, cursor) {
   if (numComments === undefined) {
     numComments = defaultNum;
   }
-  
   const commentContainer = document.getElementById("comments-container");
-  removeChildren(commentContainer);
+  const loadMoreContainer = document.getElementById("load-more-container");
+  if (clear === true || clear === undefined) {
+    removeChildren(commentContainer);
+  }
+  else {
+      // Remove previous button
+    loadMoreContainer.removeChild(loadMoreContainer.lastChild);
+  }
   fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
-    commentContainer.appendChild(makeUL(commentResponse.comments.map(commentToHTMLElement), 
-        "list-group list-group-flush", "list-group-item"));
-    commentContainer.appendChild(makePaginationLinks(commentResponse.nextCursor));
+    // commentContainer.appendChild(makeUL(commentResponse.comments.map(commentToHTMLElement), 
+    //     "list-group list-group-flush", "list-group-item"));
+    for (let element of commentResponse.comments.map(commentToHTMLElement)) {
+      commentContainer.appendChild(element);
+    }
+    loadMoreContainer.appendChild(addLoadMoreButton(commentResponse.nextCursor));
   });
 }
 
