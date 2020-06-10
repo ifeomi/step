@@ -160,10 +160,33 @@ function commentToHTMLElement(comment) {
   return card;
 }
 
+function makePaginationLinks(nextCursor) {
+  const pageNav = document.createElement("nav");
+//   pageNav.dataset.next = nextCursor;
+  const next = document.createElement("button");
+  next.type = "button";
+  next.className = "page-link";
+  next.id = "nextPage";
+  next.dataset.cursor = nextCursor;
+  next.innerText = "Next";
+  next.addEventListener("click", (event) => {
+        console.log("clicked")
+        addComments(5, event.target.dataset.cursor);
+        });
+  const ul = document.createElement("ul");
+  ul.className = "pagination";
+  const li = document.createElement("li");
+  li.className = "page-item";
+  li.appendChild(next);
+  ul.appendChild(li);
+  pageNav.appendChild(ul);
+  return pageNav;
+}
+
 /**
  * Add comments to DOM.
  */
-function addComments(numComments) {
+function addComments(numComments, cursor) {
   getLoginStatus();
   
   const defaultNum = "5";
@@ -174,10 +197,10 @@ function addComments(numComments) {
   
   const commentContainer = document.getElementById("comments-container");
   removeChildren(commentContainer);
-
-  fetch("/data?max=" + numComments).then(response => response.json()).then((comments) => {
-    commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
+  fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
+    commentContainer.appendChild(makeUL(commentResponse.comments.map(commentToHTMLElement), 
         "list-group list-group-flush", "list-group-item"));
+    commentContainer.appendChild(makePaginationLinks(commentResponse.nextCursor));
   });
 }
 

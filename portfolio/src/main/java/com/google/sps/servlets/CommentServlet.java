@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.appengine.api.users.UserService;
@@ -28,13 +29,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
@@ -54,17 +58,37 @@ public class CommentServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // If there's no max parameter, load all the comments
     max = request.getParameter("max") != null ? Integer.parseInt(request.getParameter("max")) : Integer.MAX_VALUE;
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(max);
+
+    String startCursor = request.getParameter("cursor");
+    System.out.println(startCursor.equals("undefined"));
+    if (!startCursor.equals("undefined") && startCursor != null) {
+        fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
+    }
+
     Query query = new Query(entityKind).setAncestor(homepageCommentKey)
                       .addSort("timestamp", SortDirection.DESCENDING);
-    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(max));
+    PreparedQuery pq = datastore.prepare(query);
+    QueryResultList<Entity> results;
+    try {
+      results = pq.asQueryResultList(fetchOptions);
+    } catch (IllegalArgumentException e) {
+      response.sendRedirect("/index.html");
+      return;
+    }
     List<Comment> comments = new ArrayList<>();
     
     for (Entity entity : results) {
       comments.add(entityToComment(entity));
     }
+    String cursorString = results.getCursor().toWebSafeString();
+
+    HashMap<String, Object> commentResponse = new HashMap<String, Object>();
+    commentResponse.put("comments", comments);
+    commentResponse.put("nextCursor", cursorString);
     
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(comments));
+    response.getWriter().println((new Gson()).toJson(commentResponse)); 
   }
 
   @Override
