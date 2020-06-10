@@ -77,6 +77,7 @@ public class CommentServlet extends HttpServlet {
       response.sendRedirect("/index.html");
       return;
     }
+
     List<Comment> comments = new ArrayList<>();
     
     for (Entity entity : results) {
@@ -116,7 +117,12 @@ public class CommentServlet extends HttpServlet {
     String email = (String) entity.getProperty("email");
     Date timestamp = (Date) entity.getProperty("timestamp");
     String message = (String) entity.getProperty("message");
-    float sentimentScore = ((Number) entity.getProperty("sentimentScore")).floatValue();
+    float sentimentScore;
+    try {
+      sentimentScore = ((Number) entity.getProperty("sentimentScore")).floatValue();
+    } catch(NullPointerException e) {
+      sentimentScore = 0f;
+    }
     
     Comment comment = 
         new Comment(author, email, timestamp, message, sentimentScore);
@@ -127,7 +133,12 @@ public class CommentServlet extends HttpServlet {
     String author = request.getParameter("name");
     Date timestamp = new Date();
     String message = request.getParameter("message");
-    float sentimentScore = analyzeSentiment(message);
+    float sentimentScore;
+    try {
+      sentimentScore = analyzeSentiment(message);
+    } catch(IOException e) {
+      sentimentScore = 0f;
+    }
 
     Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
@@ -139,7 +150,7 @@ public class CommentServlet extends HttpServlet {
     return commentEntity;
   }
 
-  private float analyzeSentiment(String message) {
+  private float analyzeSentiment(String message) throws IOException {
     Document document = 
         Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
     LanguageServiceClient languageService = LanguageServiceClient.create();

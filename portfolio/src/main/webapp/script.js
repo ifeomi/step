@@ -158,7 +158,7 @@ function commentToHTMLElement(comment) {
   cardBody.appendChild(title);
 //   cardBody.appendChild(timestamp);
   cardBody.appendChild(message);
-  cardBody.appendChild(score);
+  card.appendChild(score);
   
   return card;
 }
