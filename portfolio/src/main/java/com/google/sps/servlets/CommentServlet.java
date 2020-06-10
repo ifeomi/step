@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +59,7 @@ public class CommentServlet extends HttpServlet {
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(max);
 
     String startCursor = request.getParameter("cursor");
-    System.out.println(startCursor.equals("undefined"));
+
     if (!startCursor.equals("undefined") && startCursor != null) {
         fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
@@ -81,11 +79,19 @@ public class CommentServlet extends HttpServlet {
     for (Entity entity : results) {
       comments.add(entityToComment(entity));
     }
-    String cursorString = results.getCursor().toWebSafeString();
 
+    String cursorString = results.getCursor().toWebSafeString();
+    
     HashMap<String, Object> commentResponse = new HashMap<String, Object>();
     commentResponse.put("comments", comments);
-    commentResponse.put("nextCursor", cursorString);
+
+    // If cursor strings are the same, there are no more results
+    if (startCursor.equals(cursorString)) {
+      commentResponse.put("nextCursor", new Boolean(false));  
+    }
+    else {
+      commentResponse.put("nextCursor", cursorString);
+    }
     
     response.setContentType("application/json;");
     response.getWriter().println((new Gson()).toJson(commentResponse)); 
@@ -100,12 +106,6 @@ public class CommentServlet extends HttpServlet {
     userEmail = userService.getCurrentUser().getEmail();
     datastore.put(commentRequestToEntity(request));
     response.sendRedirect("/index.html");
-  }
-
-  private String convertToJsonUsingGson(List<Comment> array) {
-    Gson gson = new Gson();
-    String json = gson.toJson(array);
-    return json;
   }
 
   private Comment entityToComment(Entity entity) {
