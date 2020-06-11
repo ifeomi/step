@@ -30,6 +30,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
@@ -38,10 +39,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.cloud.language.v1.Document;
-import com.google.cloud.language.v1.LanguageServiceClient;
-import com.google.cloud.language.v1.Sentiment;
 import com.google.gson.Gson;
+import com.google.sps.data.AnalyzeSentiment;
 import com.google.sps.data.Comment;
 
 /** Servlet that returns comments data */
@@ -133,10 +132,16 @@ public class CommentServlet extends HttpServlet {
     String author = request.getParameter("name");
     Date timestamp = new Date();
     String message = request.getParameter("message");
+    
     float sentimentScore;
+    HashMap<String, Float> sentenceScores = new HashMap<String, Float>();
+
     try {
-      sentimentScore = analyzeSentiment(message);
+      AnalyzeSentiment sentimentResponse = new AnalyzeSentiment(message);
+      sentimentScore = sentimentResponse.getMessageSentiment();
+      sentenceScores = sentimentResponse.getSentenceSentiments();
     } catch(IOException e) {
+      // Avoid nullPointerException by setting sentimentScore to 0
       sentimentScore = 0f;
     }
 
@@ -146,19 +151,14 @@ public class CommentServlet extends HttpServlet {
     commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("message", message);
     commentEntity.setProperty("sentimentScore", sentimentScore);
+    if (sentenceScores.size() > 0) {
+      EmbeddedEntity ee = new EmbeddedEntity();
+      for (String key : sentenceScores.keySet()) {
+        ee.setProperty(key, sentenceScores.get(key));
+      }
+      commentEntity.setProperty("sentenceScores", ee);
+    }
     
     return commentEntity;
-  }
-
-  private float analyzeSentiment(String message) throws IOException {
-    Document document = 
-        Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();    float score = 0f;
-    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
-      Sentiment sentiment = languageService.analyzeSentiment(document).getDocumentSentiment();
-      score = sentiment.getScore();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return score;
   }
 }

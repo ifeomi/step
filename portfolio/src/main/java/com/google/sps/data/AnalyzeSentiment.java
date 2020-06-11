@@ -28,20 +28,21 @@ public final class AnalyzeSentiment {
     return sentenceSentiments;
   }
 
-  private void analyzeSentiment(String message) throws IOException {
+  private void analyzeSentiment(String message) {
     Document doc = 
         Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
-    LanguageServiceClient languageService = LanguageServiceClient.create();
-    AnalyzeSentimentResponse resp = languageService.analyzeSentiment(doc);
-    Sentiment sentiment = resp.getDocumentSentiment();
-    List<Sentence> sentences = resp.getSentencesList();
-    messageSentiment = sentiment.getScore();
-    
-    // Create HashMap of sentences to their sentiment score
-    for (Sentence sentence : sentences) {
-      sentenceSentiments.put(sentence.getText().getContent(), new Float(sentence.getSentiment().getScore()));
-    }
-
-    languageService.close();
-  }  
+    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
+      AnalyzeSentimentResponse resp = languageService.analyzeSentiment(doc);
+      Sentiment sentiment = resp.getDocumentSentiment();
+      List<Sentence> sentences = resp.getSentencesList();
+      messageSentiment = sentiment.getScore();
+      // Create HashMap of sentences to their sentiment score
+      for (Sentence sentence : sentences) {
+        sentenceSentiments.put(sentence.getText().getContent(), new Float(sentence.getSentiment().getScore()));
+      }
+    } catch (IOException e) {
+      messageSentiment = 0f;
+      e.printStackTrace();
+    }        
+  }
 }
