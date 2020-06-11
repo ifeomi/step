@@ -17,10 +17,9 @@ package com.google.sps.servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,18 +27,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
-/** Servlet that returns some example content. */
+/** Servlet that returns comments data */
 @WebServlet("/data")
 public class CommentServlet extends HttpServlet {
 
@@ -48,20 +50,51 @@ public class CommentServlet extends HttpServlet {
   private Key homepageCommentKey = KeyFactory.createKey("Comments", "homepage comments");
   private UserService userService = UserServiceFactory.getUserService();
   private String userEmail;
+  private int max;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // If there's no max parameter, load all the comments
+    max = request.getParameter("max") != null ? Integer.parseInt(request.getParameter("max")) : Integer.MAX_VALUE;
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(max);
+
+    String startCursor = request.getParameter("cursor");
+
+    if (!startCursor.equals("undefined") && startCursor != null) {
+        fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
+    }
+
     Query query = new Query(entityKind).setAncestor(homepageCommentKey)
                       .addSort("timestamp", SortDirection.DESCENDING);
-    PreparedQuery results = datastore.prepare(query);
-
+    PreparedQuery pq = datastore.prepare(query);
+    QueryResultList<Entity> results;
+    try {
+      results = pq.asQueryResultList(fetchOptions);
+    } catch (IllegalArgumentException e) {
+      response.sendRedirect("/index.html");
+      return;
+    }
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    
+    for (Entity entity : results) {
       comments.add(entityToComment(entity));
     }
 
+    String cursorString = results.getCursor().toWebSafeString();
+    
+    HashMap<String, Object> commentResponse = new HashMap<String, Object>();
+    commentResponse.put("comments", comments);
+
+    // If cursor strings are the same, there are no more results
+    if (startCursor.equals(cursorString)) {
+      commentResponse.put("nextCursor", new Boolean(false));  
+    }
+    else {
+      commentResponse.put("nextCursor", cursorString);
+    }
+    
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(comments));
+    response.getWriter().println((new Gson()).toJson(commentResponse)); 
   }
 
   @Override
@@ -73,12 +106,6 @@ public class CommentServlet extends HttpServlet {
     userEmail = userService.getCurrentUser().getEmail();
     datastore.put(commentRequestToEntity(request));
     response.sendRedirect("/index.html");
-  }
-
-  private String convertToJsonUsingGson(List<Comment> array) {
-    Gson gson = new Gson();
-    String json = gson.toJson(array);
-    return json;
   }
 
   private Comment entityToComment(Entity entity) {

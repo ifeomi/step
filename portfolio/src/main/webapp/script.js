@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {genres} from './genre_constants.js';
+import { genres } from "./genre_constants.js";
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -31,12 +31,12 @@ function shuffle(array) {
  * Makes unordered list from array.
  */
 function makeUL(array, ulClass, liClass) {
-  const list = document.createElement('ul');
+  const list = document.createElement("ul");
   if (ulClass !== null) {
     list.className = ulClass;
   }
   for (let i = 0; i < array.length; i++) {
-    const item = document.createElement('li');
+    const item = document.createElement("li");
     if (liClass !== null) {
       item.className = liClass;
     }
@@ -57,21 +57,27 @@ function makeUL(array, ulClass, liClass) {
  */
 function validateForm(form) {
   const valid = form.checkValidity();
-  form.classList.add('was-validated');
+  form.classList.add("was-validated");
   return valid;
+}
+
+function removeChildren(element) {
+  while (element.hasChildNodes()) {
+    element.removeChild(element.childNodes[0]);
+  }
 }
 
 /**
  * Generates a playlist based on selected genres and number of songs.
  */
 function generatePlaylist() {
-  const playlistForm = document.getElementById('playlistForm');
+  const playlistForm = document.getElementById("playlistForm");
   if (validateForm(playlistForm) === false) {
     return;
   }
 
   // Get user selections
-  const selectElement = document.getElementById('genreSelect');
+  const selectElement = document.getElementById("genreSelect");
   let selectedGenres = Array.from(selectElement.selectedOptions)
       .map(option => option.value);
   const playlistLength = document.getElementById("playlist-length").value;
@@ -107,10 +113,8 @@ function generatePlaylist() {
   playlistUrl += playlistIds.join();
 
   // Remove previous playlist from page and add new one
-  const playlistContainer = document.getElementById('playlist-container');
-  while (playlistContainer.hasChildNodes()) {
-    playlistContainer.removeChild(playlistContainer.childNodes[0]);
-  }
+  const playlistContainer = document.getElementById("playlist-container");
+  removeChildren(playlistContainer);
 
   const heading = document.createElement("h2");
   heading.innerText = "Here are your tunes:";
@@ -125,8 +129,8 @@ function generatePlaylist() {
   playlistContainer.appendChild(makeUL(playlistStrings));
 }
 
-if (document.getElementById('playlistSubmit') !== null) {
-  document.getElementById('playlistSubmit').addEventListener('click', generatePlaylist);
+if (document.getElementById("playlistSubmit") !== null) {
+  document.getElementById("playlistSubmit").addEventListener("click", generatePlaylist);
 }
 
 /**
@@ -135,39 +139,68 @@ if (document.getElementById('playlistSubmit') !== null) {
  */
 function commentToHTMLElement(comment) {
   const card = document.createElement("div");
-  card.className = "card";
+  card.className = "card border-0 my-1";
   const cardBody = document.createElement("div");
   cardBody.className = "card-body";
-  const author = document.createElement("h5");
-  author.className = "card-title";
-  author.innerHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
-  const timestamp = document.createElement("h6");
-  timestamp.className = "card-subtitle mb-2 text-muted";
-  timestamp.innerText = comment.timestamp;
+  const title = document.createElement("h5");
+  title.className = "card-title";
+  let titleHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
+  titleHTML += "&nbsp&nbsp<small class=\"text-muted\">" + comment.timestamp + "</small>";
+  title.innerHTML = titleHTML;
   const message = document.createElement("p");
   message.className = "card-text";
   message.innerText = comment.message;
   
   card.appendChild(cardBody);
-  cardBody.appendChild(author);
-  cardBody.appendChild(timestamp);
+  cardBody.appendChild(title);
+//   cardBody.appendChild(timestamp);
   cardBody.appendChild(message);
   
   return card;
 }
 
+function addLoadMoreButton(nextCursor) {
+  if (nextCursor === false) {
+    return document.createTextNode("All comments loaded.")
+  }
+  const loadMore = document.createElement("button");
+  loadMore.type = "button";
+  loadMore.className = "btn btn-primary";
+  loadMore.dataset.cursor = nextCursor;
+  loadMore.innerText = "Load more";
+  loadMore.addEventListener("click", (event) => {
+    addComments(5, event.target.dataset.cursor, false);
+  });
+  return loadMore;
+}
+
 /**
  * Add comments to DOM.
  */
-function addComments() {
+function addComments(numComments, cursor, clear) {
   getLoginStatus();
-  fetch('/data').then(response => response.json()).then((comments) => {
-    const commentContainer = document.getElementById('comments-container');
-    while (commentContainer.hasChildNodes()) {
-      commentContainer.removeChild(commentContainer.childNodes[0]);
+  
+  const defaultNum = "5";
+
+  if (numComments === undefined) {
+    numComments = defaultNum;
+  }
+  const commentContainer = document.getElementById("comments-container");
+  const loadMoreContainer = document.getElementById("load-more-container");
+  if (clear === true || clear === undefined) {
+    removeChildren(commentContainer);
+  }
+  else {
+      // Remove previous button
+    loadMoreContainer.removeChild(loadMoreContainer.lastChild);
+  }
+  fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
+    // commentContainer.appendChild(makeUL(commentResponse.comments.map(commentToHTMLElement), 
+    //     "list-group list-group-flush", "list-group-item"));
+    for (let element of commentResponse.comments.map(commentToHTMLElement)) {
+      commentContainer.appendChild(element);
     }
-    commentContainer.appendChild(makeUL(comments.map(commentToHTMLElement), 
-        "list-group list-group-flush", "list-group-item"));
+    loadMoreContainer.appendChild(addLoadMoreButton(commentResponse.nextCursor));
   });
 }
 
@@ -194,8 +227,18 @@ function deleteComments() {
   fetch(request).then(addComments());
 }
 
-window.addEventListener('load', addComments)
+window.addEventListener('load', function() {
+  addComments();
+});
 
 if (document.getElementById('deleteComments') !== null) {
   document.getElementById('deleteComments').addEventListener('click', deleteComments);
+}
+
+if (document.getElementById("maxComments") !== null) {
+  const maxCommentsSelect = document.getElementById("maxComments");
+  maxCommentsSelect.addEventListener("change", function() {
+    const numComments = maxCommentsSelect.value;
+    addComments(numComments);
+  });
 }

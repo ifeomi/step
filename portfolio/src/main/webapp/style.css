@@ -46,3 +46,7 @@ span.title {
 #comment-form {
   display: none;
 }
+
+.page-item {
+  list-style: none;
+}
