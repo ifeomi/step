@@ -133,12 +133,7 @@ public class CommentServlet extends HttpServlet {
     String author = request.getParameter("name");
     Date timestamp = new Date();
     String message = request.getParameter("message");
-    float sentimentScore;
-    try {
-      sentimentScore = analyzeSentiment(message);
-    } catch(IOException e) {
-      sentimentScore = 0f;
-    }
+    float sentimentScore = analyzeSentiment(message);
 
     Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
@@ -150,14 +145,16 @@ public class CommentServlet extends HttpServlet {
     return commentEntity;
   }
 
-  private float analyzeSentiment(String message) throws IOException {
+  private float analyzeSentiment(String message) {
     Document document = 
         Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
-    LanguageServiceClient languageService = LanguageServiceClient.create();
-    Sentiment sentiment = languageService.analyzeSentiment(document).getDocumentSentiment();
-    float magnitude = sentiment.getMagnitude();
-    float score = sentiment.getScore();
-    languageService.close();
+    float score = 0f;
+    try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
+      Sentiment sentiment = languageService.analyzeSentiment(document).getDocumentSentiment();
+      score = sentiment.getScore();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return score;
   }
 }
