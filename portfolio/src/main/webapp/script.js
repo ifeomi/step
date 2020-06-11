@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { genres } from "./genre_constants.js";
+const defaultMaxComments = "5";
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -150,11 +151,14 @@ function commentToHTMLElement(comment) {
   const message = document.createElement("p");
   message.className = "card-text";
   message.innerText = comment.message;
+  const score = document.createElement("div");
+  score.className = "card-footer text-muted";
+  score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
   cardBody.appendChild(title);
-//   cardBody.appendChild(timestamp);
   cardBody.appendChild(message);
+  card.appendChild(score);
   
   return card;
 }
@@ -169,7 +173,7 @@ function addLoadMoreButton(nextCursor) {
   loadMore.dataset.cursor = nextCursor;
   loadMore.innerText = "Load more";
   loadMore.addEventListener("click", (event) => {
-    addComments(5, event.target.dataset.cursor, false);
+    addComments(defaultMaxComments, event.target.dataset.cursor, false);
   });
   return loadMore;
 }
@@ -179,11 +183,9 @@ function addLoadMoreButton(nextCursor) {
  */
 function addComments(numComments, cursor, clear) {
   getLoginStatus();
-  
-  const defaultNum = "5";
 
   if (numComments === undefined) {
-    numComments = defaultNum;
+    numComments = defaultMaxComments;
   }
   const commentContainer = document.getElementById("comments-container");
   const loadMoreContainer = document.getElementById("load-more-container");
@@ -191,12 +193,10 @@ function addComments(numComments, cursor, clear) {
     removeChildren(commentContainer);
   }
   else {
-      // Remove previous button
+    // Remove previous button
     loadMoreContainer.removeChild(loadMoreContainer.lastChild);
   }
   fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
-    // commentContainer.appendChild(makeUL(commentResponse.comments.map(commentToHTMLElement), 
-    //     "list-group list-group-flush", "list-group-item"));
     for (let element of commentResponse.comments.map(commentToHTMLElement)) {
       commentContainer.appendChild(element);
     }
