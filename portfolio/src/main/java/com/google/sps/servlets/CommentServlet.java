@@ -136,14 +136,10 @@ public class CommentServlet extends HttpServlet {
     float sentimentScore;
     HashMap<String, Float> sentenceScores = new HashMap<String, Float>();
 
-    try {
-      AnalyzeSentiment sentimentResponse = new AnalyzeSentiment(message);
-      sentimentScore = sentimentResponse.getMessageSentiment();
-      sentenceScores = sentimentResponse.getSentenceSentiments();
-    } catch(IOException e) {
-      // Avoid nullPointerException by setting sentimentScore to 0
-      sentimentScore = 0f;
-    }
+    AnalyzeSentiment sentimentResponse = new AnalyzeSentiment(message);
+    sentimentScore = sentimentResponse.getMessageSentiment();
+    sentenceScores = sentimentResponse.getSentenceSentiments();
+    
 
     Entity commentEntity = new Entity(entityKind, homepageCommentKey);
     commentEntity.setProperty("author", author);
