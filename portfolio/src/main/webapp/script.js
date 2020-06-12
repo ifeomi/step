@@ -156,8 +156,8 @@ function commentToHTMLElement(comment) {
   score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
-  cardBody.appendChild(title);
   cardBody.appendChild(deleteButton);
+  cardBody.appendChild(title);
   cardBody.appendChild(message);
   card.appendChild(score);
   
@@ -193,15 +193,13 @@ function addComments(numComments, cursor, clear) {
   if (clear === true || clear === undefined) {
     removeChildren(commentContainer);
   }
-  else {
-    // Remove previous button
-    loadMoreContainer.removeChild(loadMoreContainer.lastChild);
-  }
+
   fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
     for (let element of commentResponse.comments.map(commentToHTMLElement)) {
       commentContainer.appendChild(element);
     }
     addDeleteButtonListener("btn-delete");
+    removeChildren(loadMoreContainer);
     loadMoreContainer.appendChild(addLoadMoreButton(commentResponse.nextCursor));
   });
 }
