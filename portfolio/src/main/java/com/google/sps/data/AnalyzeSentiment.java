@@ -16,7 +16,7 @@ public final class AnalyzeSentiment {
   private float messageSentiment;
   private HashMap<String, Float> sentenceSentiments = new HashMap<String, Float>();
 
-  public AnalyzeSentiment(String message) throws IOException {
+  public AnalyzeSentiment(String message) {
       analyzeSentiment(message);
   }
 

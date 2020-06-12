@@ -117,14 +117,23 @@ public class CommentServlet extends HttpServlet {
     Date timestamp = (Date) entity.getProperty("timestamp");
     String message = (String) entity.getProperty("message");
     float sentimentScore;
+    HashMap<String, Float> sentenceScores = new HashMap<String, Float>();
     try {
       sentimentScore = ((Number) entity.getProperty("sentimentScore")).floatValue();
     } catch(NullPointerException e) {
       sentimentScore = 0f;
     }
+
+    try {
+      EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty("sentenceScores");
+      (ee.getProperties()).forEach((sentence, score) -> 
+          sentenceScores.put(sentence, ((Number) score).floatValue()));
+    } catch (NullPointerException ok) {
+      // comment entity doesn't have sentence level SA, just put empty hashmap
+    }
     
     Comment comment = 
-        new Comment(author, email, timestamp, message, sentimentScore);
+        new Comment(author, email, timestamp, message, sentimentScore, sentenceScores);
     return comment;
   }
 
