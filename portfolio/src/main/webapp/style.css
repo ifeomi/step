@@ -50,3 +50,11 @@ span.title {
 .page-item {
   list-style: none;
 }
+
+.positive-sentiment:hover {
+  text-decoration: underline darkseagreen solid;
+}
+
+.negative-sentiment:hover {
+  text-decoration: underline red solid;
+}

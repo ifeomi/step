@@ -150,7 +150,17 @@ function commentToHTMLElement(comment) {
   deleteButton.className = "btn btn-delete btn-secondary btn-sm float-right";
   const message = document.createElement("p");
   message.className = "card-text";
-  message.innerText = comment.message;
+
+  for (let sentence in comment.sentenceScores) {
+    if (comment.sentenceScores[sentence] > 0) {
+      comment.message = comment.message.replace(sentence, "<span class=\"positive-sentiment\">"+sentence+"</span>")
+    }
+    else if (comment.sentenceScores[sentence] < 0) {
+      comment.message = comment.message.replace(sentence, "<span class=\"negative-sentiment\">"+sentence+"</span>")
+    }
+  }
+  message.innerHTML = comment.message;
+
   const score = document.createElement("div");
   score.className = "card-footer text-muted";
   score.innerText = "Sentiment score: " + comment.sentimentScore;

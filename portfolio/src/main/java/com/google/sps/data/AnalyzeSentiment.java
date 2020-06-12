@@ -29,7 +29,7 @@ public final class AnalyzeSentiment {
   }
 
   private void analyzeSentiment(String message) {
-    Document doc = 
+    Document doc =
         Document.newBuilder().setContent(message).setType(Document.Type.PLAIN_TEXT).build();
     try (LanguageServiceClient languageService = LanguageServiceClient.create()) {
       AnalyzeSentimentResponse resp = languageService.analyzeSentiment(doc);
@@ -43,6 +43,6 @@ public final class AnalyzeSentiment {
     } catch (IOException e) {
       messageSentiment = 0f;
       e.printStackTrace();
-    }        
+    }
   }
 }
