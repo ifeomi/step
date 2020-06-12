@@ -14,6 +14,7 @@
 
 import { genres } from "./genre_constants.js";
 const defaultMaxComments = "5";
+let email;
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -166,7 +167,9 @@ function commentToHTMLElement(comment) {
   score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
-  cardBody.appendChild(deleteButton);
+  if (email === comment.email) {
+    cardBody.appendChild(deleteButton);
+  }
   cardBody.appendChild(title);
   cardBody.appendChild(message);
   card.appendChild(score);
@@ -221,11 +224,11 @@ function getLoginStatus() {
       document.getElementById("login-container").innerHTML = 
           "<p>You are logged in as " + status.email + ". Log out <a href=\""
           + status.url + "\">here</a>.</p>";
-
     } else {
       document.getElementById("login-container").innerHTML = 
           "<p>Log in <a href=\"" + status.url + "\">here</a> to leave a comment.</p>";
     }
+    email = status.email;
   });
 }
 
@@ -251,13 +254,6 @@ function addDeleteButtonListener(className) {
       deleteComments(event.target.dataset.key);
     });
   }
-}
-
-if (document.getElementById("deleteComments") !== null) {
-  const deleteAllKey = "-1";
-  document.getElementById("deleteComments").addEventListener("click", function() {
-    deleteComments(deleteAllKey);
-  });
 }
 
 if (document.getElementById("playlistSubmit") !== null) {
