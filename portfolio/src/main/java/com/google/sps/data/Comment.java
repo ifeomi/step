@@ -6,6 +6,7 @@ import java.util.HashMap;
 /** Class containing comments */
 public final class Comment {
 
+  private final String key;
   private final String author;
   private final String email;
   private final Date timestamp;
@@ -13,13 +14,18 @@ public final class Comment {
   private final float sentimentScore;
   private final HashMap<String, Float> sentenceScores;
 
-  public Comment(String author, String email, Date timestamp, String message, float sentimentScore, HashMap<String, Float> sentenceScores) {
+  public Comment(String key, String author, String email, Date timestamp, String message, float sentimentScore, HashMap<String, Float> sentenceScores) {
+    this.key = key;
     this.author = author;
     this.email = email;
     this.timestamp = timestamp;
     this.message = message;
     this.sentimentScore = sentimentScore;
     this.sentenceScores = sentenceScores;
+  }
+
+  public String getKey() {
+    return key;
   }
 
   public String getAuthor() {

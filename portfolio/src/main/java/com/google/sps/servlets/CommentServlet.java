@@ -112,6 +112,7 @@ public class CommentServlet extends HttpServlet {
   }
 
   private Comment entityToComment(Entity entity) {
+    String key = KeyFactory.keyToString(entity.getKey());
     String author = (String) entity.getProperty("author");
     String email = (String) entity.getProperty("email");
     Date timestamp = (Date) entity.getProperty("timestamp");
@@ -133,7 +134,7 @@ public class CommentServlet extends HttpServlet {
     }
     
     Comment comment = 
-        new Comment(author, email, timestamp, message, sentimentScore, sentenceScores);
+        new Comment(key, author, email, timestamp, message, sentimentScore, sentenceScores);
     return comment;
   }
 

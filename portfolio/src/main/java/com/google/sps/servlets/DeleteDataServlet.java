@@ -16,20 +16,33 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.DatastoreService;
 
-@WebServlet("/delete-data")
+@WebServlet("/delete")
 public class DeleteDataServlet extends HttpServlet{
   
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private String entityKind = "Comment";
   private Key homepageCommentKey = KeyFactory.createKey("Comments", "homepage comments");
+  private String deleteAllParam = "-1";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // Delete all comments data
-    Query query = new Query("Comment").setAncestor(homepageCommentKey).setKeysOnly();
-    PreparedQuery resultKeys = datastore.prepare(query);
+    if (request.getParameter("key").equals(deleteAllParam)) {
+      // Delete all comments data
+      Query query = new Query(entityKind).setAncestor(homepageCommentKey).setKeysOnly();
+      PreparedQuery resultKeys = datastore.prepare(query);
 
-    for (Entity entity : resultKeys.asIterable()) {
-      datastore.delete(entity.getKey());
+      for (Entity entity : resultKeys.asIterable()) {
+        datastore.delete(entity.getKey());
+      }
+    }
+
+    else {
+      try {
+        Key key = KeyFactory.stringToKey(request.getParameter("key"));
+        datastore.delete(key);
+      } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

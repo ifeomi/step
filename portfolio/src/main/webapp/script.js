@@ -130,10 +130,6 @@ function generatePlaylist() {
   playlistContainer.appendChild(makeUL(playlistStrings));
 }
 
-if (document.getElementById("playlistSubmit") !== null) {
-  document.getElementById("playlistSubmit").addEventListener("click", generatePlaylist);
-}
-
 /**
  * Converts JS object representing a comment to a HTML card
  * @param Object comment 
@@ -148,6 +144,10 @@ function commentToHTMLElement(comment) {
   let titleHTML = "<a href=\"mailto:"+ comment.email + "\">" + comment.author + "</a>";
   titleHTML += "&nbsp&nbsp<small class=\"text-muted\">" + comment.timestamp + "</small>";
   title.innerHTML = titleHTML;
+  const deleteButton = document.createElement("button");
+  deleteButton.dataset.key = comment.key;
+  deleteButton.innerText = "Delete";
+  deleteButton.className = "btn btn-delete btn-secondary btn-sm float-right";
   const message = document.createElement("p");
   message.className = "card-text";
   message.innerText = comment.message;
@@ -156,6 +156,7 @@ function commentToHTMLElement(comment) {
   score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
+  cardBody.appendChild(deleteButton);
   cardBody.appendChild(title);
   cardBody.appendChild(message);
   card.appendChild(score);
@@ -192,14 +193,13 @@ function addComments(numComments, cursor, clear) {
   if (clear === true || clear === undefined) {
     removeChildren(commentContainer);
   }
-  else {
-    // Remove previous button
-    loadMoreContainer.removeChild(loadMoreContainer.lastChild);
-  }
+
   fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
     for (let element of commentResponse.comments.map(commentToHTMLElement)) {
       commentContainer.appendChild(element);
     }
+    addDeleteButtonListener("btn-delete");
+    removeChildren(loadMoreContainer);
     loadMoreContainer.appendChild(addLoadMoreButton(commentResponse.nextCursor));
   });
 }
@@ -221,18 +221,37 @@ function getLoginStatus() {
 
 /**
  * Delete all comments from the DOM.
+ * @param String key - the key of the comment to be deleted
  */
-function deleteComments() {
-  const request = new Request('/delete-data', {method: 'POST'});
+function deleteComments(key) {
+  const request = new Request("/delete?key=" + key, {method: "POST"});
   fetch(request).then(addComments());
 }
 
+
+// Event listeners
 window.addEventListener('load', function() {
   addComments();
 });
 
-if (document.getElementById('deleteComments') !== null) {
-  document.getElementById('deleteComments').addEventListener('click', deleteComments);
+function addDeleteButtonListener(className) {
+  const buttons = document.getElementsByClassName(className);
+  for (const button of buttons) {
+    button.addEventListener("click", (event) => {
+      deleteComments(event.target.dataset.key);
+    });
+  }
+}
+
+if (document.getElementById("deleteComments") !== null) {
+  const deleteAllKey = "-1";
+  document.getElementById("deleteComments").addEventListener("click", function() {
+    deleteComments(deleteAllKey);
+  });
+}
+
+if (document.getElementById("playlistSubmit") !== null) {
+  document.getElementById("playlistSubmit").addEventListener("click", generatePlaylist);
 }
 
 if (document.getElementById("maxComments") !== null) {
