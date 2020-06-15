@@ -237,7 +237,7 @@ function getLoginStatus() {
  * @param String key - the key of the comment to be deleted
  */
 function deleteComments(key) {
-  const request = new Request("/delete?key=" + key, {method: "POST"});
+  const request = new Request("/delete?key=" + key + "&email=" + email, {method: "POST"});
   fetch(request).then(addComments());
 }
 
