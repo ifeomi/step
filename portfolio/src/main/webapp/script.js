@@ -14,6 +14,7 @@
 
 import { genres } from "./genre_constants.js";
 const defaultMaxComments = "5";
+let email;
 
 /** 
  * Implements  Fisher-Yates shuffle (from https://javascript.info/task/shuffle).
@@ -150,13 +151,25 @@ function commentToHTMLElement(comment) {
   deleteButton.className = "btn btn-delete btn-secondary btn-sm float-right";
   const message = document.createElement("p");
   message.className = "card-text";
-  message.innerText = comment.message;
+
+  for (let sentence in comment.sentenceScores) {
+    if (comment.sentenceScores[sentence] > 0) {
+      comment.message = comment.message.replace(sentence, "<span class=\"positive-sentiment\">"+sentence+"</span>")
+    }
+    else if (comment.sentenceScores[sentence] < 0) {
+      comment.message = comment.message.replace(sentence, "<span class=\"negative-sentiment\">"+sentence+"</span>")
+    }
+  }
+  message.innerHTML = comment.message;
+
   const score = document.createElement("div");
   score.className = "card-footer text-muted";
   score.innerText = "Sentiment score: " + comment.sentimentScore;
   
   card.appendChild(cardBody);
-  cardBody.appendChild(deleteButton);
+  if (email === comment.email) {
+    cardBody.appendChild(deleteButton);
+  }
   cardBody.appendChild(title);
   cardBody.appendChild(message);
   card.appendChild(score);
@@ -211,11 +224,11 @@ function getLoginStatus() {
       document.getElementById("login-container").innerHTML = 
           "<p>You are logged in as " + status.email + ". Log out <a href=\""
           + status.url + "\">here</a>.</p>";
-
     } else {
       document.getElementById("login-container").innerHTML = 
           "<p>Log in <a href=\"" + status.url + "\">here</a> to leave a comment.</p>";
     }
+    email = status.email;
   });
 }
 
@@ -224,7 +237,7 @@ function getLoginStatus() {
  * @param String key - the key of the comment to be deleted
  */
 function deleteComments(key) {
-  const request = new Request("/delete?key=" + key, {method: "POST"});
+  const request = new Request("/delete?key=" + key + "&email=" + email, {method: "POST"});
   fetch(request).then(addComments());
 }
 
@@ -241,13 +254,6 @@ function addDeleteButtonListener(className) {
       deleteComments(event.target.dataset.key);
     });
   }
-}
-
-if (document.getElementById("deleteComments") !== null) {
-  const deleteAllKey = "-1";
-  document.getElementById("deleteComments").addEventListener("click", function() {
-    deleteComments(deleteAllKey);
-  });
 }
 
 if (document.getElementById("playlistSubmit") !== null) {
