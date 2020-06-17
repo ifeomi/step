@@ -25,75 +25,82 @@ public final class FindMeetingQuery {
     // Initialize time range for the whole day 
     meetingTimes.add(TimeRange.WHOLE_DAY);
     
-    // Brute force: (todo: optimize)
-    // Go through the event collections
-    // For each attendee at the event
-        // Check if attendee is an attendee of the meeting
-            // If yes, remove that time block
-    // Return the remaining time ranges that are longer than duration
+
+    if (request.getAttendees().size() > 0) {
+      ArrayList<TimeRange> mandatoryAttendeeTimes = findTime(meetingTimes, request.getAttendees(), request.getDuration(), events);
+      ArrayList<TimeRange> allAttendeeTimes = findTime((ArrayList) mandatoryAttendeeTimes.clone(), request.getOptionalAttendees(), request.getDuration(), events);
+      return (allAttendeeTimes.size() > 0) ? allAttendeeTimes : mandatoryAttendeeTimes;
+    }
+
+    else {
+      return findTime(meetingTimes, request.getOptionalAttendees(), request.getDuration(), events);
+    }
+  }
+
+  private ArrayList<TimeRange> findTime(ArrayList<TimeRange> potentialTimes, Collection<String> attendees, long duration, Collection<Event> events) {
     for (Event event : events) {
-      Set<String> attendees = event.getAttendees();
       for (String attendee : attendees) {
-        if (request.getAttendees().contains(attendee)) {
-          removeTimeRange(event.getWhen());
+        if (event.getAttendees().contains(attendee)) {
+          removeTimeRange(potentialTimes, event.getWhen());
         }
       }
     }
 
+    // Only return long enough time ranges
     ArrayList<TimeRange> validMeetingTimes = new ArrayList<TimeRange>();
-
-    for (TimeRange time : meetingTimes) {
-      if (time.duration() >= request.getDuration()) {
+    for (TimeRange time : potentialTimes) {
+      if (time.duration() >= duration) {
         validMeetingTimes.add(time);
       }
     }
+
     return validMeetingTimes;
   }
 
-  private void removeTimeRange(TimeRange eventTime) {
+  private void removeTimeRange(ArrayList<TimeRange> potentialTimes, TimeRange eventTime) {
     // Removing a time block:
       // Iterate through the collection
-        // If timerange contains the block to remove -- check case (todo: confirm that these are exhaustive)
+        // If timerange contains the block to remove
           // |-----|
           //   |--|
           // Case 1: start and end of remove are both within the curr_time
             // Replace the current item with two: current start to start of remove and end of remove to end
           
-            // |------|    |------|
+          // |------|    |------|
           // |--|      |--|
           // Case 2: end of remove is within the curr_time
             // Replace current item with end of remove to c_end
           
-            // |------|    |------| |----|
+          // |------|    |------| |----|
           //     |--|          |----|
           // Case 3: start of remove is within the curr_time:
             // Replace current item with c_start to r_beginning
           
-            // |-----|
+          // |-----|
           // |---------|
           // Case 4: remove contains curr time range
             // Remove current time
 
     int i = 0;
-    while (i < meetingTimes.size()) {
-      TimeRange currTimeRange = meetingTimes.get(i);
+    while (i < potentialTimes.size()) {
+      TimeRange currTimeRange = potentialTimes.get(i);
       if (currTimeRange.overlaps(eventTime)) {
         if (currTimeRange.contains(eventTime)) {
-          meetingTimes.set(i, TimeRange.fromStartEnd(currTimeRange.start(), eventTime.start(), false));
-          meetingTimes.add(i + 1, TimeRange.fromStartEnd(eventTime.end(), currTimeRange.end(), false));
+          potentialTimes.set(i, TimeRange.fromStartEnd(currTimeRange.start(), eventTime.start(), false));
+          potentialTimes.add(i + 1, TimeRange.fromStartEnd(eventTime.end(), currTimeRange.end(), false));
         }
 
         else if (currTimeRange.contains(eventTime.end())) {
-          meetingTimes.set(i, TimeRange.fromStartEnd(eventTime.end(), currTimeRange.end(), false));
+          potentialTimes.set(i, TimeRange.fromStartEnd(eventTime.end(), currTimeRange.end(), false));
         }
 
         else if (currTimeRange.contains(eventTime.start())) {
-          meetingTimes.set(i, TimeRange.fromStartEnd(currTimeRange.start(), eventTime.start(), false));
+          potentialTimes.set(i, TimeRange.fromStartEnd(currTimeRange.start(), eventTime.start(), false));
         }
 
         else {
           // must be that remove contains current time range
-          meetingTimes.set(i, TimeRange.fromStartDuration(currTimeRange.start(), 0));
+          potentialTimes.set(i, TimeRange.fromStartDuration(currTimeRange.start(), 0));
         }
       }
       i++;
