@@ -25,7 +25,6 @@ public final class FindMeetingQuery {
     // Initialize time range for the whole day 
     meetingTimes.add(TimeRange.WHOLE_DAY);
     
-
     if (request.getAttendees().size() > 0) {
       ArrayList<TimeRange> mandatoryAttendeeTimes = findTime(meetingTimes, request.getAttendees(), request.getDuration(), events);
       ArrayList<TimeRange> allAttendeeTimes = findTime((ArrayList) mandatoryAttendeeTimes.clone(), request.getOptionalAttendees(), request.getDuration(), events);
