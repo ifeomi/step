@@ -66,18 +66,18 @@
         <li>Campus Marketing Director @ Bumble</li>
       </ul>
       <h3>comments</h3>
+      <div class="form-group">
+        <!-- TODO @ifeomi display total number of comments -->
+        <label for="maxComments">Maximum number of comments (defaults to 5)</label>
+        <select class="form-control" id="maxComments" name="maxComments">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+        </select>
+      </div>
+      <div id="comments-container"></div>
+      <div id="load-more-container" class="mb-2 text-center"></div>
       <form action="/data" method="POST" id="comment-form">
-        <div class="form-group">
-          <!-- TODO @ifeomi display total number of comments -->
-          <label for="maxComments">Maximum number of comments (defaults to 5)</label>
-          <select class="form-control" id="maxComments" name="maxComments">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="25">25</option>
-          </select>
-        </div>
-        <div id="comments-container"></div>
-        <div id="load-more-container" class="mb-2 text-center"></div>
         <div class="form-group">
           <label for="name">Name</label>
           <input class="form-control" id="name" name="name">
