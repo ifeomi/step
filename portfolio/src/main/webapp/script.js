@@ -204,10 +204,19 @@ function addComments(numComments, cursor, clear) {
   const commentContainer = document.getElementById("comments-container");
   const loadMoreContainer = document.getElementById("load-more-container");
   if (clear === true || clear === undefined) {
+    // when first loading comments, clear any children and add loading spinner
     removeChildren(commentContainer);
+    commentContainer.innerHTML = "<div class=\"text-center\" id=\"loading\">" +
+    "<div class=\"spinner-border\" role=\"status\">" +
+      "<span class=\"sr-only\">Loading...</span>" +
+    "</div>" +
+  "</div>"
   }
 
   fetch("/data?max=" + numComments + "&cursor=" + cursor).then(response => response.json()).then((commentResponse) => {
+    if (document.getElementById("loading") !== null) {
+      commentContainer.removeChild(document.getElementById("loading"));
+    }
     for (let element of commentResponse.comments.map(commentToHTMLElement)) {
       commentContainer.appendChild(element);
     }
